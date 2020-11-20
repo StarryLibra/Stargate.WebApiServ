@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 namespace Stargate.WebApiServ.Web
 {
@@ -33,10 +34,18 @@ namespace Stargate.WebApiServ.Web
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CoreWebApi v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApiServ v1"));
+            }
+            else
+            {
+                app.UseExceptionHandler("/error");
             }
 
             app.UseHttpsRedirection();
+
+            // It's important that the UseSerilogRequestLogging() call appears before handlers such as MVC.
+            // The middleware will not time or log components that appear before it in the pipeline. 
+            app.UseSerilogRequestLogging();
 
             app.UseRouting();
 
