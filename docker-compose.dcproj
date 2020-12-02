@@ -4,8 +4,8 @@
     <ProjectVersion>2.1</ProjectVersion>
 	<DockerTargetOS>Linux</DockerTargetOS>
 	<ProjectGuid>54466646-fb5f-4fdd-b31c-87ec6ae399a5</ProjectGuid>
-	<DockerLaunchAction>None</DockerLaunchAction>
-	<DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
+	<DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
+	<DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
 	<DockerServiceName>stargate.webapiserv.web</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>

@@ -7,9 +7,9 @@
 
 ## 技术介绍：
 
-*   核心框架：ASP.net Core 3.1 WebAPI
+*   核心框架：ASP.NET Core Runtime 5.0.0
 *   日志框架：Serilog
-*   持久层框架：EntityFramework Core
+*   持久层框架：FreeSql
 
 
 ### 许可证

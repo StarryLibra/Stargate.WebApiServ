@@ -1,6 +1,6 @@
 using System;
 
-namespace Stargate.WebApiServ.Web
+namespace Stargate.WebApiServ.Web.Models
 {
     public class WeatherForecast
     {

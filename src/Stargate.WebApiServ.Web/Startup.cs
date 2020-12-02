@@ -36,6 +36,8 @@ namespace Stargate.WebApiServ.Web
                         options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
                         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                     }
+                    if (jsonConfig.GetValue<bool>("AllowNumberInQuotes", defaultValue: false))
+                        options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
                     if (jsonConfig.GetValue<bool>("RelaxedEscaping", defaultValue: true))
                         options.JsonSerializerOptions.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
                     options.JsonSerializerOptions.IgnoreNullValues = jsonConfig.GetValue<bool>("IgnoreNullValues", defaultValue: true);
@@ -72,7 +74,7 @@ namespace Stargate.WebApiServ.Web
                     logger.LogError(feature?.Error, message: resp.Message);
 
                     context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                    context.Response.ContentType = "application/json";
+                    context.Response.ContentType = "application/json; charset=utf-8";
                     var jsonString = JsonSerializer.Serialize(resp);
                     await context.Response.WriteAsync(jsonString);
                 }));

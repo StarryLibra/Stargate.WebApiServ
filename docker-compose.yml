@@ -1,37 +1,27 @@
 version: '3.4'
 
 services:
-
   stargate.webapiserv.web:
     image: ${DOCKER_REGISTRY-}stargate-webapiserv-web
-    ports:
-      - 8002:80
     build:
       context: .
-      dockerfile: src/Stargate.SinglePageApp.Web/Dockerfile
+      dockerfile: src/Stargate.WebApiServ.Web/Dockerfile
     container_name: stargate-webapiserv-web
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    command: dotnet Stargate.SinglePageApp.Web.dll
     depends_on:
-      - db
+      - sqldata
   
-  db:
-    image: postgres
-    restart: always
-    ports:
-      - 5432:5432
+  sqldata:
+    image: postgres:latest
     container_name: stargate-webapiserv-db
     environment:
       POSTGRES_PASSWORD: PostgreSQL@docker
+    ports:
+      - "5432"
+    restart: always
 
   adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
+    image: ${DOCKER_REGISTRY-}adminer
     container_name: stargate-webapiserv-dbadminer
-      
-networks:
-  default:
-    driver: bridge
+    ports:
+      - "8080:8080"
+    restart: always
