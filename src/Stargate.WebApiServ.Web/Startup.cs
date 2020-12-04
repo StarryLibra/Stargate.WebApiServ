@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,6 +28,14 @@ namespace Stargate.WebApiServ.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpClient();
+            
+            services.AddResponseCompression(options =>
+            {
+                options.Providers.Add<BrotliCompressionProvider>();
+                options.Providers.Add<GzipCompressionProvider>();
+            });
+
             services.AddControllers()
                 .AddJsonOptions(options =>
                 {
@@ -78,6 +87,8 @@ namespace Stargate.WebApiServ.Web
                     var jsonString = JsonSerializer.Serialize(resp);
                     await context.Response.WriteAsync(jsonString);
                 }));
+
+                app.UseResponseCompression();
             }
 
             app.UseHttpsRedirection();
