@@ -1,9 +1,11 @@
 using System;
+using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -14,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Stargate.WebApiServ.Web.Swagger;
+using Serilog.Events;
 
 // 因Swagger需XML注释来完成WebAPI文档，故打开了项目级生成XML文档编译开关，但本文件无需关心XML注释
 #pragma warning disable CS1591
@@ -38,6 +41,8 @@ namespace Stargate.WebApiServ.Web
                 options.Providers.Add<BrotliCompressionProvider>();
                 options.Providers.Add<GzipCompressionProvider>();
             });
+
+            services.AddHealthChecks();
 
             services.AddControllers()
                 .AddJsonOptions(options =>
@@ -106,7 +111,38 @@ namespace Stargate.WebApiServ.Web
 
             // It's important that the UseSerilogRequestLogging() call appears before handlers such as MVC.
             // The middleware will not time or log components that appear before it in the pipeline. 
-            app.UseSerilogRequestLogging();
+            app.UseSerilogRequestLogging(opts => {
+                // 向请求日志添加扩展数据
+                // 参考：https://www.cnblogs.com/yilezhu/p/12227271.html
+                opts.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+                {
+                    // Set all the common properties available for every request
+                    diagnosticContext.Set("Host", httpContext.Request.Host);
+                    diagnosticContext.Set("Protocol", httpContext.Request.Protocol);
+                    diagnosticContext.Set("Scheme", httpContext.Request.Scheme);
+                    if (httpContext.Request.Headers.ContainsKey("Accept"))
+                        diagnosticContext.Set("Accept", httpContext.Request.Headers["Accept"].ToList());
+                    if (httpContext.Request.QueryString.HasValue)
+                        diagnosticContext.Set("QueryString", httpContext.Request.QueryString.Value);
+                    var endpoint = httpContext.GetEndpoint();
+                    if (endpoint is object)
+                        diagnosticContext.Set("EndpointName", endpoint.DisplayName);
+                    // Set the content-type of the response at this point
+                    diagnosticContext.Set("ContentType", httpContext.Response.ContentType);
+                };
+                // 避免因健康检查(HealthCheck)请求导致过多日志
+                // 参考：https://www.cnblogs.com/yilezhu/p/12253361.html
+                opts.GetLevel = (ctx, elapsed, ex) =>
+                (
+                    ctx.GetEndpoint()?.DisplayName.Equals("Health checks") ?? false
+                        ? LogEventLevel.Verbose
+                        : ex is not null
+                            ? LogEventLevel.Error
+                            : ctx.Response.StatusCode >= StatusCodes.Status500InternalServerError
+                                ? LogEventLevel.Error
+                                : LogEventLevel.Information
+                );
+            });
 
             app.UseRouting();
 
@@ -115,6 +151,20 @@ namespace Stargate.WebApiServ.Web
             app.UseWelcomePage("/welcome");     // 借用欢迎页用于人工测试网站是否已正确启动，必须在调用UseEndpoints()之前使用
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/health", new HealthCheckOptions
+                {
+                    // 自定义健康检查(HealthCheck)的输出
+                    // 参考：https://www.cnblogs.com/yyfh/p/11787434.html
+                    ResponseWriter = (context, healthReport) =>
+                    {
+                        context.Response.ContentType = "application/json; charset=utf-8";
+                        return context.Response.WriteAsync(JsonSerializer.Serialize(new
+                        {
+                            Status = healthReport.Status.ToString(),
+                            Errors = healthReport.Entries.Select(e => new { e.Key, Value = e.Value.Status.ToString() })
+                        }));
+                    }
+                });
                 endpoints.MapControllers();
             });
         }

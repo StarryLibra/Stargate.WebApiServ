@@ -377,7 +377,9 @@ FodyWeavers.xsd
 .history/
 
 
-## Ignore temporary files of the solution.
+## Additional ignore files of this solution.
+##
+## The followings are own ignore setting.
 
 # Except for .gitkeep
 !.gitkeep
