@@ -4,13 +4,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
+#pragma warning disable CS1591
 namespace Stargate.WebApiServ.Web
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            // 运行时 ASPNETCORE_ENVIRONMENT 环境变量建议值：Development-开发环境、Staging-预演环境、Production（或不设置）-生产环境
+            // 运行时ASPNETCORE_ENVIRONMENT环境变量建议值：Development-开发环境、Staging-预演环境、Production（或不设置）-生产环境
             var currentEnv = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
             var config = new ConfigurationBuilder()
                 .SetBasePath(AppContext.BaseDirectory)

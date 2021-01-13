@@ -13,7 +13,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using Stargate.WebApiServ.Web.Swagger;
 
+// 因Swagger需XML注释来完成WebAPI文档，故打开了项目级生成XML文档编译开关，但本文件无需关心XML注释
+#pragma warning disable CS1591
 namespace Stargate.WebApiServ.Web
 {
     public class Startup
@@ -53,20 +56,28 @@ namespace Stargate.WebApiServ.Web
                     options.JsonSerializerOptions.WriteIndented = jsonConfig.GetValue<bool>("WriteIndented", defaultValue: false);
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
-            services.AddSwaggerGen(c =>
+            services.AddMySwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Stargate.WebApi", Version = "v1" });
+                var authServerStr = this.Configuration["AppSettings:AuthServer"];
+                if (!String.IsNullOrEmpty(authServerStr)
+                  && Uri.TryCreate(authServerStr, UriKind.RelativeOrAbsolute, out var authServerUri))
+                {
+                    c.AuthServer = authServerUri;
+                }
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime, ILogger<Startup> logger)
         {
+            lifetime.ApplicationStarted.Register(() => logger.LogInformation("Started WebApiServ service lifetime."));
+            lifetime.ApplicationStopping.Register(() => logger.LogWarning("Stopping WebApiServ service lifetime……"));
+            lifetime.ApplicationStopped.Register(() => logger.LogWarning("Stoped WebApiServ service lifetime."));
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApiServ v1"));
+                app.UseMySwaggerAndUI();
             }
             else
             {
@@ -101,7 +112,7 @@ namespace Stargate.WebApiServ.Web
 
             app.UseAuthorization();
 
-            app.UseWelcomePage("/welcome");     // 借用欢迎页用于人工测试网站是否已正确启动，必须在调用 UseEndpoints() 之前使用
+            app.UseWelcomePage("/welcome");     // 借用欢迎页用于人工测试网站是否已正确启动，必须在调用UseEndpoints()之前使用
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
