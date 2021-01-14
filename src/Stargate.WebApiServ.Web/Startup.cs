@@ -80,9 +80,9 @@ namespace Stargate.WebApiServ.Web
                     var feature = context.Features.Get<IExceptionHandlerPathFeature>();
                     var resp = new
                     {
-                        Message = feature?.Error?.Message ?? "全局异常捕获了一个未被处置的未明异常。",
-                        Path = feature?.Path,
-                        Source = feature?.Error?.Source ?? "未指明异常抛出源。"
+                        Message = feature?.Error.Message ?? "全局异常捕获了一个未被处置的未明异常。",
+                        Path = feature?.Path ?? "未指明异常路径。",
+                        Source = feature?.Error.Source ?? "未指明异常抛出源。"
                     };
                     
                     logger.LogError(feature?.Error, message: resp.Message);
