@@ -7,6 +7,9 @@ using Stargate.WebApiServ.Web.Models;
 
 namespace Stargate.WebApiServ.Web.Controllers
 {
+    /// <summary>
+    /// 创建.NET项目时自带的示例控制器（模拟天气预报控制器）
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
@@ -18,11 +21,19 @@ namespace Stargate.WebApiServ.Web.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="logger">网页应用的日志</param>
         public WeatherForecastController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
         }
 
+        /// <summary>
+        /// 创建.NET项目时自带的示例方法（模拟获取天气预报）
+        /// </summary>
+        /// <returns>天气预报</returns>
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
