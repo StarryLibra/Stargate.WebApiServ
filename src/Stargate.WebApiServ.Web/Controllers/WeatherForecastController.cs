@@ -21,10 +21,8 @@ namespace Stargate.WebApiServ.Web.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="logger">网页应用的日志</param>
+        /// <summary>构造函数</summary>
+        /// <param name="logger">与模拟天气预报控制器关联的应用日志</param>
         public WeatherForecastController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;

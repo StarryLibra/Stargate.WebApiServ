@@ -9,14 +9,15 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
 using Serilog;
-using Stargate.WebApiServ.Web.Swagger;
 using Serilog.Events;
+using Stargate.WebApiServ.Web.Swagger;
+using Stargate.WebApiServ.Web.Models;
 
 // 因Swagger需XML注释来完成WebAPI文档，故打开了项目级生成XML文档编译开关，但本文件无需关心XML注释
 #pragma warning disable CS1591
@@ -43,6 +44,8 @@ namespace Stargate.WebApiServ.Web
             });
 
             services.AddHealthChecks();
+
+            services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("TodoList"));
 
             services.AddControllers()
                 .AddJsonOptions(options =>

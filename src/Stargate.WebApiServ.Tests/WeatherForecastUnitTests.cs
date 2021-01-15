@@ -12,14 +12,14 @@ namespace Stargate.WebApiServ.Tests
         private static WeatherForecastController _controller;
         private static readonly string[] _summaries = { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
         
-        [ClassInitialize()]
+        [ClassInitialize]
         public static void Initialize(TestContext testContext)
         {
             _controller = new WeatherForecastController(logger: NullLogger<WeatherForecastController>.Instance);
         }
 
         [TestMethod]
-        [TestCategory("Sample")]
+        [TestCategory("WeatherForecast")]
         public void TestGet()
         {
             var result = _controller.Get();
