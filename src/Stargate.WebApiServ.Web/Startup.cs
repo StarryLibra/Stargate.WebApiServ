@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -73,14 +74,30 @@ namespace Stargate.WebApiServ.Web
                     c.AuthServer = authServerUri;
                 }
             });
+
+            services.PostConfigure<ApiBehaviorOptions>(options =>
+            {
+                // 在请求中因模型验证失败而自动响应HTTP 400请求无效(Bad request)错误时插入日志记录。
+                // 参考：https://github.com/dotnet/AspNetCore.Docs/issues/12157
+                var builtInFactory = options.InvalidModelStateResponseFactory;
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    // Get an instance of ILogger and log accordingly.
+                    var loggerFactory = context.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>();
+                    var logger = loggerFactory.CreateLogger(context.ActionDescriptor.DisplayName);
+                    logger.LogError("请求的模型验证失败，响应HTTP 400请求无效(Bad request)错误。");
+
+                    return builtInFactory(context);
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime, ILogger<Startup> logger)
         {
             lifetime.ApplicationStarted.Register(() => logger.LogInformation("Started WebApiServ service lifetime."));
-            lifetime.ApplicationStopping.Register(() => logger.LogWarning("Stopping WebApiServ service lifetime……"));
-            lifetime.ApplicationStopped.Register(() => logger.LogWarning("Stoped WebApiServ service lifetime."));
+            lifetime.ApplicationStopping.Register(() => logger.LogWarning("Be stopping WebApiServ service lifetime..."));
+            lifetime.ApplicationStopped.Register(() => logger.LogWarning("Had Stoped WebApiServ service lifetime."));
 
             if (env.IsDevelopment())
             {
@@ -133,7 +150,7 @@ namespace Stargate.WebApiServ.Web
                     // Set the content-type of the response at this point
                     diagnosticContext.Set("ContentType", httpContext.Response.ContentType);
                 };
-                // 避免因健康检查(HealthCheck)请求导致过多日志
+                // 避免因健康检查(HealthCheck)请求导致过多日志。
                 // 参考：https://www.cnblogs.com/yilezhu/p/12253361.html
                 opts.GetLevel = (ctx, elapsed, ex) =>
                 (
