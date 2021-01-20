@@ -152,15 +152,12 @@ namespace Stargate.WebApiServ.Web
                 };
                 // 避免因健康检查(HealthCheck)请求导致过多日志。
                 // 参考：https://www.cnblogs.com/yilezhu/p/12253361.html
-                opts.GetLevel = delegate(HttpContext ctx, double elapsed, Exception ex)
+                var defaultGetLevel = opts.GetLevel;
+                opts.GetLevel = (ctx, elapsed, ex) =>
                 {
                     return ctx.GetEndpoint()?.DisplayName.Equals("Health checks") ?? false
                         ? LogEventLevel.Verbose
-                        : ex is not null
-                            ? LogEventLevel.Error
-                            : ctx.Response.StatusCode >= StatusCodes.Status500InternalServerError
-                                ? LogEventLevel.Error
-                                : LogEventLevel.Information;
+                        : defaultGetLevel(ctx, elapsed, ex);
                 };
             });
 
