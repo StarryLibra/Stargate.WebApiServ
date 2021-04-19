@@ -15,10 +15,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using LogDashboard;
 using Serilog;
 using Serilog.Events;
-using Stargate.WebApiServ.Web.Swagger;
 using Stargate.WebApiServ.Web.Models;
+using Stargate.WebApiServ.Web.Swagger;
 
 // 因Swagger需XML注释来完成WebAPI文档，故打开了项目级生成XML文档编译开关，但本文件无需关心XML注释
 #pragma warning disable CS1591
@@ -40,6 +41,11 @@ namespace Stargate.WebApiServ.Web
             
             services.AddResponseCompression(options =>
             {
+                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
+                {
+                    "application/atom+xml",
+                    "image/svg+xml"
+                });
                 options.Providers.Add<BrotliCompressionProvider>();
                 options.Providers.Add<GzipCompressionProvider>();
             });
@@ -64,6 +70,11 @@ namespace Stargate.WebApiServ.Web
                     options.JsonSerializerOptions.IgnoreNullValues = jsonConfig.GetValue<bool>("IgnoreNullValues", defaultValue: true);
                     options.JsonSerializerOptions.WriteIndented = jsonConfig.GetValue<bool>("WriteIndented", defaultValue: false);
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                })
+                .AddMvcOptions(options =>
+                {
+                    options.RespectBrowserAcceptHeader = true;
+                    options.ReturnHttpNotAcceptable = true;
                 });
             services.AddMySwaggerGen(c =>
             {
@@ -74,6 +85,7 @@ namespace Stargate.WebApiServ.Web
                     c.AuthServer = authServerUri;
                 }
             });
+            services.AddLogDashboard();
 
             services.PostConfigure<ApiBehaviorOptions>(options =>
             {
@@ -165,10 +177,12 @@ namespace Stargate.WebApiServ.Web
             });
 
             app.UseRouting();
+            app.UseCors();
 
             app.UseAuthorization();
 
             app.UseWelcomePage("/welcome");     // 借用欢迎页用于人工测试网站是否已正确启动，必须在调用UseEndpoints()之前使用
+            app.UseLogDashboard();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHealthChecks("/health", new HealthCheckOptions
