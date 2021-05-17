@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using LogDashboard;
 using Serilog;
 using Serilog.Events;
 using Stargate.WebApiServ.Web.Models;
@@ -81,6 +82,7 @@ namespace Stargate.WebApiServ.Web
                     c.AuthServer = authServerUri;
                 }
             });
+            services.AddLogDashboard();
 
             services.PostConfigure<ApiBehaviorOptions>(options =>
             {
@@ -171,12 +173,14 @@ namespace Stargate.WebApiServ.Web
             app.UseHttpsRedirection();
             //app.UseStaticFiles();
             app.UseRouting();
+            app.UseCors();
 
             app.UseCors();
             app.UseAuthorization();
 
             app.UseWelcomePage("/welcome");     // 借用欢迎页用于人工测试网站是否已正确启动，必须在调用UseEndpoints()之前使用
             app.UseMySwaggerAndUI();
+            app.UseLogDashboard();              // 可视化日志面板，引用自：https://github.com/realLiangshiwei/LogDashboard
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHealthChecks("/health", new HealthCheckOptions
