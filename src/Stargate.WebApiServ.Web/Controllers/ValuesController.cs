@@ -17,7 +17,10 @@ namespace Stargate.WebApiServ.Web.Controllers
         /// 列出条目。
         /// </summary>
         /// <returns>字符串组</returns>
-        // GET: api/<ValuesController>
+        /// <remarks>
+        /// 请求模式：
+        /// GET /api/values
+        /// </remarks>
         [HttpGet]
         public IEnumerable<string> Get()
         {
@@ -29,7 +32,10 @@ namespace Stargate.WebApiServ.Web.Controllers
         /// </summary>
         /// <param name="id">唯一标识值</param>
         /// <returns>字符串</returns>
-        // GET api/<ValuesController>/5
+        /// <remarks>
+        /// 请求模式：
+        /// GET /api/values/{id}
+        /// </remarks>
         [HttpGet("{id}")]
         public string Get(int id)
         {
@@ -40,7 +46,11 @@ namespace Stargate.WebApiServ.Web.Controllers
         /// 创建。
         /// </summary>
         /// <param name="value">字符串值</param>
-        // POST api/<ValuesController>
+        /// <remarks>
+        /// 请求模式：
+        /// POST /api/values
+        /// #string#
+        /// </remarks>
         [HttpPost]
         public void Post([FromBody] string value)
         {
@@ -51,7 +61,11 @@ namespace Stargate.WebApiServ.Web.Controllers
         /// </summary>
         /// <param name="id">唯一标识值</param>
         /// <param name="value">字符串值</param>
-        // PUT api/<ValuesController>/5
+        /// <remarks>
+        /// 请求模式：
+        /// PUT /api/values/{id}
+        /// #string#
+        /// </remarks>
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
@@ -61,7 +75,10 @@ namespace Stargate.WebApiServ.Web.Controllers
         /// 删除。
         /// </summary>
         /// <param name="id">唯一标识值</param>
-        // DELETE api/<ValuesController>/5
+        /// <remarks>
+        /// 请求模式：
+        /// DELETE /api/values/{id}
+        /// </remarks>
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

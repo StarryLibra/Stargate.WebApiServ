@@ -1,3 +1,5 @@
+using Stargate.WebApiServ.Web.Swagger;
+
 namespace Stargate.WebApiServ.Web.Models
 {
     /// <summary>
@@ -15,6 +17,7 @@ namespace Stargate.WebApiServ.Web.Models
         public bool IsComplete { get; set; }
 
         /// <summary>保密内容</summary>
+        [SwaggerExclude]
         public string Secret { get; set; }
     }
 }

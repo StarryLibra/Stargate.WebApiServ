@@ -5,6 +5,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Stargate.WebApiServ.Web.Models;
+using Stargate.WebApiServ.Web.Swagger;
+
+// For more information on archive 'Tutorial: Create a web API with ASP.NET Core',
+// visit https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-3.1&tabs=visual-studio
 
 namespace Stargate.WebApiServ.Web.Controllers
 {
@@ -28,7 +32,10 @@ namespace Stargate.WebApiServ.Web.Controllers
         /// 获取所有待办事项。
         /// </summary>
         /// <returns>所有待办事项的列表。</returns>
-        // GET: api/TodoItems
+        /// <remarks>
+        /// 请求模式：
+        /// GET /api/TodoItems
+        /// </remarks>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoItemDTO>>> GetTodoItems()
         {
@@ -38,11 +45,16 @@ namespace Stargate.WebApiServ.Web.Controllers
         }
 
         /// <summary>
-        /// 获取某一待办事项。
+        /// 按 ID 获取项。
         /// </summary>
         /// <param name="id">指定待办事项的唯一序列值</param>
-        /// <returns>包含表示待办事项的数据传输对象实例的执行结果。</returns>
-        // GET: api/TodoItems/{id}
+        /// <returns>包含表示待办事项的数据传输对象实例的列表。</returns>
+        /// <remarks>
+        /// 请求模式：
+        /// GET /api/TodoItems/{id}
+        /// </remarks>
+        /// <response code="404">没有相应的待办事项</response>
+        // GET: api/TodoItems/5
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -58,12 +70,23 @@ namespace Stargate.WebApiServ.Web.Controllers
         }
 
         /// <summary>
-        /// 更改待办事项。
+        /// 更新现有项。
         /// </summary>
         /// <param name="id">指定待办事项的唯一序列值</param>
         /// <param name="todoItemDTO">待办事项数据传输对象</param>
         /// <returns>处理更改的执行结果</returns>
-        // PUT: api/TodoItems/{id}
+        /// <remarks>
+        /// 请求模式：
+        /// PUT /api/TodoItems/{id}
+        /// {
+        ///   "id": #number#,    
+        ///   "name":  #string#,
+        ///   "isComplete": #boolean#
+        /// }
+        /// </remarks>
+        /// <response code="400">指定的待办事项唯一序列值与请求内容中的id值不一致</response>
+        /// <response code="404">没有相应的待办事项</response>
+        // PUT: api/TodoItems/5
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -95,12 +118,19 @@ namespace Stargate.WebApiServ.Web.Controllers
             return NoContent();
         }
 
-
         /// <summary>
-        /// 创建新的待办事项。
+        /// 添加新项。
         /// </summary>
         /// <param name="todoItemDTO">待办事项数据传输对象</param>
         /// <returns>包含表示待办事项的数据传输对象实例的创建执行结果。</returns>
+        /// <remarks>
+        /// 请求模式：
+        /// POST /api/TodoItems
+        /// {
+        ///   "name":  #string#,
+        ///   "isComplete": #boolean#
+        /// }
+        /// </remarks>
         // POST: api/TodoItems
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -115,18 +145,20 @@ namespace Stargate.WebApiServ.Web.Controllers
             _context.TodoItems.Add(todoItem);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(
-                nameof(GetTodoItem),
-                new { id = todoItem.Id },
-                ItemToDTO(todoItem));
+            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, ItemToDTO(todoItem));
         }
 
         /// <summary>
-        /// 删除待办事项。
+        /// 删除项。
         /// </summary>
         /// <param name="id">指定待办事项的唯一序列值</param>
         /// <returns>处理删除的执行结果</returns>
-        // DELETE: api/TodoItems/{id}
+        /// <remarks>
+        /// 请求模式：
+        /// DELETE /api/TodoItems/{id}
+        /// </remarks>
+        /// <response code="404">没有相应的待办事项</response>
+        // DELETE: api/TodoItems/5
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -144,6 +176,9 @@ namespace Stargate.WebApiServ.Web.Controllers
             return NoContent();
         }
 
+        private bool TodoItemExists(long id) =>
+            _context.TodoItems.Any(e => e.Id == id);
+
         private static TodoItemDTO ItemToDTO(TodoItem todoItem) => new TodoItemDTO
         {
             Id = todoItem.Id,
@@ -151,35 +186,107 @@ namespace Stargate.WebApiServ.Web.Controllers
             IsComplete = todoItem.IsComplete
         };
 
-        private bool TodoItemExists(long id) => _context.TodoItems.Any(e => e.Id == id);
-
         #region These methods are just for testing populating the secret field
 
         /// <summary>
-        /// 获取所有待办事项。
+        /// 按 ID 获取项(包含保密内容)。
         /// </summary>
-        /// <returns>所有待办事项(包含保密内容)的列表。</returns>
-        // GET: api/TodoItems/test
-        [HttpGet("test")]
-        public async Task<ActionResult<IEnumerable<TodoItem>>> GetTestTodoItems()
+        /// <param name="id">指定待办事项的唯一序列值</param>
+        /// <returns>包含表示待办事项(包含保密内容)的列表。</returns>
+        /// <remarks>
+        /// 请求模式：
+        /// GET /api/TodoItems/{id}
+        /// </remarks>
+        /// <response code="404">没有相应的待办事项</response>
+        [HttpGet("over-posting/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<ActionResult<TodoItem>> GetTodoItemWithOverposting(long id)
         {
-            return await _context.TodoItems.ToListAsync();
+            var todoItem = await _context.TodoItems.FindAsync(id);
+            if (todoItem is null)
+            {
+                return NotFound();
+            }
+
+            return todoItem;
         }
 
         /// <summary>
-        /// 创建新的待办事项。
+        /// 添加新项(包含保密内容)。
         /// </summary>
-        /// <param name="todoItem">待办事项</param>
-        /// <returns>包含表示待办事项实例的创建执行结果。</returns>
-        // POST: api/TodoItems/test
-        [HttpPost("test")]
+        /// <param name="todoItem">待办事项(包含保密内容)</param>
+        /// <returns>包含表示待办事项(包含保密内容)实例的创建执行结果。</returns>
+        /// <remarks>
+        /// 请求模式：
+        /// POST /api/TodoItems/over-posting
+        /// {
+        ///   "name":  #string#,
+        ///   "isComplete": #boolean#,
+        ///   "secret": #string#
+        /// }
+        /// </remarks>
+        [HttpPost("over-posting")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<TodoItem>> PostTestTodoItem(TodoItem todoItem)
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
         {
             _context.TodoItems.Add(todoItem);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem);
+        }
+
+        /// <summary>
+        /// 更新现有项(包含保密内容)。
+        /// </summary>
+        /// <param name="id">指定待办事项的唯一序列值</param>
+        /// <param name="todoItem">待办事项(包含保密内容)</param>
+        /// <returns>处理更改的执行结果</returns>
+        /// <remarks>
+        /// 请求模式：
+        /// PUT /api/TodoItems/over-posting/{id}
+        /// {
+        ///   "id": #number#,    
+        ///   "name":  #string#,
+        ///   "isComplete": #boolean#,
+        ///   "secret": #string#
+        /// }
+        /// </remarks>
+        /// <response code="400">指定的待办事项唯一序列值与请求内容中的id值不一致</response>
+        /// <response code="404">没有相应的待办事项</response>
+        // PUT: api/TodoItems/5
+        [HttpPut("over-posting/{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IActionResult> PutTodoItem(long id, TodoItem todoItem)
+        {
+            if (id != todoItem.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(todoItem).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TodoItemExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
         #endregion

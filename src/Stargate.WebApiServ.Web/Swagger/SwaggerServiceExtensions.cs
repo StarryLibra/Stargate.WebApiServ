@@ -57,7 +57,8 @@ namespace Stargate.WebApiServ.Web.Swagger
                     Title = "星门软件开发(StargateSoft Develop) WebAPI",
                     Description = "星门软件开发(StargateSoft Develop)使用的示例微服务WebAPI接口文档 (版本1)",
                     TermsOfService = new Uri("https://opensource.org/licenses/gpl-2.0.php"),
-                    Contact = new OpenApiContact { Name = "Libra", Email = "libra.zhu@hotmail.com", Url = new Uri("https://github.com/StarryLibra") }
+                    Contact = new OpenApiContact { Name = "Libra", Email = "libra.zhu@hotmail.com", Url = new Uri("https://github.com/StarryLibra") },
+                    License = new OpenApiLicense { Name = "使用MIT许可协议", Url = new Uri("https://mit-license.org/") }
                 });
 
                 c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
@@ -87,6 +88,9 @@ namespace Stargate.WebApiServ.Web.Swagger
                     c.IgnoreObsoleteActions();
                     c.IgnoreObsoleteProperties();
                 }
+
+                // 跳过标记了SwaggerExclude特性的属性或字段
+                c.SchemaFilter<SwaggerExcludePropertyFilter>();
 
                 // Add security information to each operation for OAuth2
                 c.OperationFilter<SecurityRequirementsOperationFilter>();

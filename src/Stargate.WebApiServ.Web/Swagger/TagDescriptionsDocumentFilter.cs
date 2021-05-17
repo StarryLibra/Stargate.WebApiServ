@@ -1,16 +1,16 @@
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Stargate.WebApiServ.Web.Swagger
 {
     /// <summary>
-    /// 向Swagger的分类项增加文字描述的IDocumentFilter过滤器。
+    /// 向Swagger的分类项增加文字描述的<c>IDocumentFilter</c>过滤器。
     /// </summary>
     public class TagDescriptionsDocumentFilter : IDocumentFilter
     {
@@ -18,7 +18,7 @@ namespace Stargate.WebApiServ.Web.Swagger
         /// 向分类项添加文字描述。
         /// </summary>
         /// <param name="swaggerDoc">Swagger的视图文档</param>
-        /// <param name="context">Swagger内部的组织内容</param>
+        /// <param name="context">Swagger文档过滤器的上下文</param>
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
             var xmlDocFilePath = Path.Combine(AppContext.BaseDirectory, "SG-WebApiServ.xml");
