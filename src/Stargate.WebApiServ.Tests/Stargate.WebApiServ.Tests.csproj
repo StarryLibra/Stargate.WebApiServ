@@ -5,11 +5,11 @@
 
     <IsPackable>false</IsPackable>
 
-    <Copyright>版权所有 © 星门软件开发(StargateSoft Develop) 2021</Copyright>
+    <Copyright>版权所有 © 星门软件开发(StargateSoft Develop) 2020-2021</Copyright>
     <Product>WebAPI 服务的单元测试</Product>
     <Company>星门软件开发(StargateSoft Develop)</Company>
     <Authors>朱俊明(StarryLibra)</Authors>
-    <Version>0.1.1</Version>
+    <Version>0.1.2</Version>
   </PropertyGroup>
 
   <ItemGroup>

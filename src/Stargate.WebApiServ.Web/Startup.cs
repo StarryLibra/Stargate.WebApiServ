@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -51,9 +52,22 @@ namespace Stargate.WebApiServ.Web
 
             services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("TodoList"));
 
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            });
 
-            services.AddHealthChecks();
+            services.AddMySwaggerGen(c =>
+            {
+                var authServerStr = this.Configuration["AppSettings:AuthServer"];
+                if (!String.IsNullOrEmpty(authServerStr)
+                  && Uri.TryCreate(authServerStr, UriKind.RelativeOrAbsolute, out var authServerUri))
+                {
+                    c.AuthServer = authServerUri;
+                }
+            });
+            services.AddLogDashboard();
             services.AddControllers()
                 .AddJsonOptions(options =>
                 {
@@ -73,20 +87,11 @@ namespace Stargate.WebApiServ.Web
                     options.JsonSerializerOptions.Converters.Add(new SystemTextJsonConvert.DateTimeMyConverter());
                     options.JsonSerializerOptions.Converters.Add(new SystemTextJsonConvert.DateTimeNullableMyConverter());
                 });
-            services.AddMySwaggerGen(c =>
-            {
-                var authServerStr = this.Configuration["AppSettings:AuthServer"];
-                if (!String.IsNullOrEmpty(authServerStr)
-                  && Uri.TryCreate(authServerStr, UriKind.RelativeOrAbsolute, out var authServerUri))
-                {
-                    c.AuthServer = authServerUri;
-                }
-            });
-            services.AddLogDashboard();
+            services.AddHealthChecks();
 
             services.PostConfigure<ApiBehaviorOptions>(options =>
             {
-                // 在请求中因模型验证失败而自动响应HTTP 400请求无效(Bad request)错误时插入日志记录。
+                // 在请求中因模型验证失败而自动响应HTTP 400请求无效(Bad request)错误时（此时会不进入任何控制器）插入日志记录。
                 // 参考：https://github.com/dotnet/AspNetCore.Docs/issues/12157
                 var builtInFactory = options.InvalidModelStateResponseFactory;
                 options.InvalidModelStateResponseFactory = context =>
@@ -172,15 +177,22 @@ namespace Stargate.WebApiServ.Web
 
             app.UseHttpsRedirection();
             //app.UseStaticFiles();
-            app.UseRouting();
-            app.UseCors();
 
             app.UseCors();
+
+            // 防止反向代理多站点部署请求转发时路径丢失
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.All
+            });
+                
+            app.UseRouting();
+
             app.UseAuthorization();
 
             app.UseWelcomePage("/welcome");     // 借用欢迎页用于人工测试网站是否已正确启动，必须在调用UseEndpoints()之前使用
             app.UseMySwaggerAndUI();
-            app.UseLogDashboard();              // 可视化日志面板，引用自：https://github.com/realLiangshiwei/LogDashboard
+            app.UseLogDashboard();              // 可视化日志面板，访问：https://doc.logdashboard.net或https://github.com/realLiangshiwei/LogDashboard
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHealthChecks("/health", new HealthCheckOptions

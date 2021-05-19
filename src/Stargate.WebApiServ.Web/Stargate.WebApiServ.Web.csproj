@@ -4,13 +4,13 @@
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>aspnet-SG_WebApiServ-E3B7ACAD-8448-4C1C-A8B7-DEF501B4B709</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <Copyright>版权所有 © 星门软件开发(StargateSoft Develop) 2021</Copyright>
+    <Copyright>版权所有 © 星门软件开发(StargateSoft Develop) 2020-2021</Copyright>
     <Description>供查询数据的 HTTP(S) WebAPI 网站。</Description>
     <Product>WebAPI 服务</Product>
     <Company>星门软件开发(StargateSoft Develop)</Company>
     <Authors>朱俊明(StarryLibra)</Authors>
-    <AssemblyVersion>0.1.2.20</AssemblyVersion>
-    <FileVersion>0.1.2.0</FileVersion>
+    <AssemblyVersion>0.1.2.22</AssemblyVersion>
+    <FileVersion>0.1.2.1</FileVersion>
     <Version>0.1.2</Version>
   </PropertyGroup>
 

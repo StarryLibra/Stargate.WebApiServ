@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Filters;
 
 #pragma warning disable CS1591
 namespace Stargate.WebApiServ.Web
@@ -23,6 +24,13 @@ namespace Stargate.WebApiServ.Web
             // 为了能全生命周期（甚至在各种基础服务启动之前）记录日志，故早早在此处建立日志
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(config)
+                .Filter.ByExcluding(Matching.WithProperty<string>(
+                    "RequestPath",
+                    p => p.StartsWith("/LogDashboard", StringComparison.OrdinalIgnoreCase) && p.Split('/')[^1].Contains(".")
+                    ))
+                .WriteTo.File($"{AppContext.BaseDirectory}logs/LogDashboard.log",
+                    rollingInterval: RollingInterval.Day,
+                    outputTemplate: "{Timestamp:HH:mm:ss.fff} || {Level} || {SourceContext:l} || {Message} || {Exception} ||end {NewLine}")
                 .CreateLogger();
 
             try
