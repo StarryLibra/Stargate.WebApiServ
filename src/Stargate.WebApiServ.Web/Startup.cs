@@ -51,6 +51,7 @@ namespace Stargate.WebApiServ.Web
             });
 
             services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("TodoList"));
+            services.AddMiniProfiler(options => options.RouteBasePath = "/profiler").AddEntityFramework();
 
             services.AddCors(options =>
             {
@@ -189,6 +190,9 @@ namespace Stargate.WebApiServ.Web
             app.UseRouting();
 
             app.UseAuthorization();
+
+            // The call to app.UseMiniProfiler must come before the call to app.UseEndpoints like
+            app.UseMiniProfiler();
 
             app.UseWelcomePage("/welcome");     // 借用欢迎页用于人工测试网站是否已正确启动，必须在调用UseEndpoints()之前使用
             app.UseMySwaggerAndUI();
