@@ -5,15 +5,15 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 namespace Stargate.WebApiServ.Web.Swagger
 {
     /// <summary>
-    /// 在Swagger文档中跳过标记了<c>SwaggerExcludeAttribute</c>特性的<c>ISchemaFilter</c>过滤器。
+    /// 在 Swagger 文档中跳过标记了 <c>SwaggerExcludeAttribute</c> 特性的 <c>ISchemaFilter</c> 过滤器。
     /// </summary>
     public class SwaggerExcludePropertyFilter : ISchemaFilter
     {
         /// <summary>
-        /// 跳过标记了<c>SwaggerExcludeAttribute</c>特性的模式内容。
+        /// 跳过标记了 <c>SwaggerExcludeAttribute</c> 特性的模式内容。
         /// </summary>
-        /// <param name="schema">Swagger的模式</param>
-        /// <param name="context">Swagger模式过滤器的上下文</param>
+        /// <param name="schema">Swagger 的模式</param>
+        /// <param name="context">Swagger 模式过滤器的上下文</param>
         public void Apply(OpenApiSchema schema, SchemaFilterContext context)
         {
             var excludedProperties = context.Type.GetProperties();

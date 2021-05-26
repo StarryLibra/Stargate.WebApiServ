@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Net.Mime;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -22,7 +23,7 @@ using Serilog.Events;
 using Stargate.WebApiServ.Web.Models;
 using Stargate.WebApiServ.Web.Swagger;
 
-// 因Swagger需XML注释来完成WebAPI文档，故打开了项目级生成XML文档编译开关，但本文件无需关心XML注释
+// 因 Swagger 需 XML 注释来完成 WebAPI 文档，故打开了项目级生成 XML 文档编译开关，但本文件无需关心 XML 注释
 #pragma warning disable CS1591
 namespace Stargate.WebApiServ.Web
 {
@@ -69,7 +70,23 @@ namespace Stargate.WebApiServ.Web
                 }
             });
             services.AddLogDashboard();
-            services.AddControllers()
+            services.AddControllers(options => options.ReturnHttpNotAcceptable = true)
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    // 在请求中因模型验证失败而自动响应 HTTP 400 请求无效(Bad request)错误时（此时会不进入任何控制器）插入日志记录。
+                    // 参考：https://github.com/dotnet/AspNetCore.Docs/issues/12157、https://docs.microsoft.com/en-us/aspnet/core/web-api/handle-errors?view=aspnetcore-5.0
+                    options.InvalidModelStateResponseFactory = context =>
+                    {
+                        // Get an instance of ILogger and log accordingly.
+                        var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Startup>>();
+                        logger.LogError("请求的模型验证失败，响应 HTTP 400 请求无效(Bad request)错误。");
+
+                        var result = new BadRequestObjectResult(context.ModelState);
+                        result.ContentTypes.Add(MediaTypeNames.Application.Json);
+                        result.ContentTypes.Add(MediaTypeNames.Application.Xml);
+                        return result;
+                    };
+                })
                 .AddJsonOptions(options =>
                 {
                     var jsonConfig = Configuration.GetSection("Json");
@@ -87,24 +104,9 @@ namespace Stargate.WebApiServ.Web
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                     options.JsonSerializerOptions.Converters.Add(new SystemTextJsonConvert.DateTimeMyConverter());
                     options.JsonSerializerOptions.Converters.Add(new SystemTextJsonConvert.DateTimeNullableMyConverter());
-                });
+                })
+                .AddXmlDataContractSerializerFormatters();
             services.AddHealthChecks();
-
-            services.PostConfigure<ApiBehaviorOptions>(options =>
-            {
-                // 在请求中因模型验证失败而自动响应HTTP 400请求无效(Bad request)错误时（此时会不进入任何控制器）插入日志记录。
-                // 参考：https://github.com/dotnet/AspNetCore.Docs/issues/12157
-                var builtInFactory = options.InvalidModelStateResponseFactory;
-                options.InvalidModelStateResponseFactory = context =>
-                {
-                    // Get an instance of ILogger and log accordingly.
-                    var loggerFactory = context.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>();
-                    var logger = loggerFactory.CreateLogger(context.ActionDescriptor.DisplayName);
-                    logger.LogError("请求的模型验证失败，响应HTTP 400请求无效(Bad request)错误。");
-
-                    return builtInFactory(context);
-                };
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -194,7 +196,7 @@ namespace Stargate.WebApiServ.Web
             // The call to app.UseMiniProfiler must come before the call to app.UseEndpoints like
             app.UseMiniProfiler();
 
-            app.UseWelcomePage("/welcome");     // 借用欢迎页用于人工测试网站是否已正确启动，必须在调用UseEndpoints()之前使用
+            app.UseWelcomePage("/welcome");     // 借用欢迎页用于人工测试网站是否已正确启动，必须在调用 UseEndpoints() 之前使用
             app.UseMySwaggerAndUI();
             app.UseLogDashboard();              // 可视化日志面板，访问：https://doc.logdashboard.net或https://github.com/realLiangshiwei/LogDashboard
             app.UseEndpoints(endpoints =>

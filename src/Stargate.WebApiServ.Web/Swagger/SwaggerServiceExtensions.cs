@@ -10,17 +10,17 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 namespace Stargate.WebApiServ.Web.Swagger
 {
     /// <summary>
-    /// Swagger服务的扩展类。
+    /// Swagger 服务的扩展类。
     /// </summary>
     public static class SwaggerServiceExtensions
     {
         /// <summary>
-        ///  注册Swagger生成器配置，定义Swagger文档。
+        ///  注册 Swagger 生成器配置，定义 Swagger 文档。
         /// </summary>
         /// <param name="services">依赖注入服务容器</param>
-        /// <param name="authServer">认证服务器URL地址</param>
+        /// <param name="authServer">认证服务器 URL 地址</param>
         /// <param name="ignoreObsolete">是否忽略已过期的操作与属性</param>
-        /// <returns>添加了Swagger文档服务的依赖注入服务容器。</returns>
+        /// <returns>添加了 Swagger 文档服务的依赖注入服务容器。</returns>
         public static IServiceCollection AddMySwaggerGen(this IServiceCollection services, string authServer, bool ignoreObsolete = false)
         {
             return services.AddMySwaggerGen(new Action<SwaggerGenOptions>(options =>
@@ -31,11 +31,11 @@ namespace Stargate.WebApiServ.Web.Swagger
         }
 
         /// <summary>
-        /// 注册Swagger生成器配置，定义Swagger文档。
+        /// 注册 Swagger 生成器配置，定义 Swagger 文档。
         /// </summary>
         /// <param name="services">依赖注入服务容器</param>
         /// <param name="configureOptions">文档服务相应的配置和选项</param>
-        /// <returns>添加了Swagger文档服务的依赖注入服务容器。</returns>
+        /// <returns>添加了 Swagger 文档服务的依赖注入服务容器。</returns>
         public static IServiceCollection AddMySwaggerGen(this IServiceCollection services, Action<SwaggerGenOptions> configureOptions)
         {
             if (services == null)
@@ -55,10 +55,10 @@ namespace Stargate.WebApiServ.Web.Swagger
                 {
                     Version = "v1",
                     Title = "星门软件开发(StargateSoft Develop) WebAPI",
-                    Description = "星门软件开发(StargateSoft Develop)使用的示例微服务WebAPI接口文档 (版本1)",
+                    Description = "星门软件开发(StargateSoft Develop)使用的示例微服务 WebAPI 接口文档 (版本1)",
                     TermsOfService = new Uri("https://opensource.org/licenses/gpl-2.0.php"),
                     Contact = new OpenApiContact { Name = "Libra", Email = "libra.zhu@hotmail.com", Url = new Uri("https://github.com/StarryLibra") },
-                    License = new OpenApiLicense { Name = "使用MIT许可协议", Url = new Uri("https://mit-license.org/") }
+                    License = new OpenApiLicense { Name = "使用 MIT 许可协议", Url = new Uri("https://mit-license.org/") }
                 });
 
                 c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
@@ -72,7 +72,7 @@ namespace Stargate.WebApiServ.Web.Swagger
                             TokenUrl = new Uri(options.AuthServer, "/connect/token"),
                             Scopes = new Dictionary<string, string>
                             {
-                                ["stargate_web-api-serv_scope"] = "星门软件WebAPI服务"
+                                ["stargate_web-api-serv_scope"] = "星门软件 WebAPI 服务"
                             }
                         }
                     },
@@ -89,7 +89,7 @@ namespace Stargate.WebApiServ.Web.Swagger
                     c.IgnoreObsoleteProperties();
                 }
 
-                // 跳过标记了SwaggerExclude特性的属性或字段
+                // 跳过标记了 SwaggerExclude 特性的属性或字段
                 c.SchemaFilter<SwaggerExcludePropertyFilter>();
 
                 // Add security information to each operation for OAuth2
@@ -105,11 +105,11 @@ namespace Stargate.WebApiServ.Web.Swagger
         }
 
         /// <summary>
-        /// 注册Swagger生成器配置，定义Swagger文档。
+        /// 注册 Swagger 生成器配置，定义 Swagger 文档。
         /// </summary>
         /// <param name="services">依赖注入服务容器</param>
         /// <param name="setupAction">配置文档服务的委托</param>
-        /// <returns>添加了Swagger文档服务的依赖注入服务容器。</returns>
+        /// <returns>添加了 Swagger 文档服务的依赖注入服务容器。</returns>
         public static IServiceCollection AddMySwaggerGen(this IServiceCollection services, Action<Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions> setupAction)
         {
             if (services == null)
@@ -128,10 +128,10 @@ namespace Stargate.WebApiServ.Web.Swagger
         /// <returns>添加了Swagger文档服务的中间件管道。</returns>
         public static IApplicationBuilder UseMySwaggerAndUI(this IApplicationBuilder app)
         {
-            // 启用中间件处理Swagger生成的JSON终结点。
+            // 启用中间件处理 Swagger 生成的 JSON 终结点。
             app.UseSwagger();
 
-            // 启用中间件处理swagger-ui(HTML、JS、CSS等等)，特别是Swagger JSON终结点。
+            // 启用中间件处理 swagger-ui(HTML、JS、CSS等等)，特别是 Swagger JSON 终结点。
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApiServ v1");
