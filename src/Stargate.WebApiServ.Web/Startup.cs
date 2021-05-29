@@ -20,6 +20,8 @@ using Microsoft.Extensions.Logging;
 using LogDashboard;
 using Serilog;
 using Serilog.Events;
+using Stargate.WebApiServ.Data;
+using Stargate.WebApiServ.Data.Repositories;
 using Stargate.WebApiServ.Web.Models;
 using Stargate.WebApiServ.Web.Swagger;
 
@@ -52,6 +54,9 @@ namespace Stargate.WebApiServ.Web
             });
 
             services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("TodoList"));
+            services.AddScoped<ProductsRepository>();
+            services.AddDbContext<ProductContext>(opt => opt.UseInMemoryDatabase("ProductInventory"));
+
             services.AddMiniProfiler(options => options.RouteBasePath = "/profiler").AddEntityFramework();
 
             services.AddCors(options =>

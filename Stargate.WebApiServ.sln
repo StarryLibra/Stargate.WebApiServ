@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stargate.WebApiServ.Web", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stargate.WebApiServ.Tests", "src\Stargate.WebApiServ.Tests\Stargate.WebApiServ.Tests.csproj", "{E2EE8380-F00B-4698-AFEF-63A8E9B85F3A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stargate.WebApiServ.Data", "src\Stargate.WebApiServ.Data\Stargate.WebApiServ.Data.csproj", "{4A1D0B8E-81B4-4E84-A3BC-4A3B3888D909}"
+EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{54466646-FB5F-4FDD-B31C-87EC6AE399A5}"
 EndProject
 Global
@@ -38,6 +40,14 @@ Global
 		{E2EE8380-F00B-4698-AFEF-63A8E9B85F3A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E2EE8380-F00B-4698-AFEF-63A8E9B85F3A}.Release|x64.ActiveCfg = Release|Any CPU
 		{E2EE8380-F00B-4698-AFEF-63A8E9B85F3A}.Release|x64.Build.0 = Release|Any CPU
+		{4A1D0B8E-81B4-4E84-A3BC-4A3B3888D909}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A1D0B8E-81B4-4E84-A3BC-4A3B3888D909}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A1D0B8E-81B4-4E84-A3BC-4A3B3888D909}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4A1D0B8E-81B4-4E84-A3BC-4A3B3888D909}.Debug|x64.Build.0 = Debug|Any CPU
+		{4A1D0B8E-81B4-4E84-A3BC-4A3B3888D909}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A1D0B8E-81B4-4E84-A3BC-4A3B3888D909}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A1D0B8E-81B4-4E84-A3BC-4A3B3888D909}.Release|x64.ActiveCfg = Release|Any CPU
+		{4A1D0B8E-81B4-4E84-A3BC-4A3B3888D909}.Release|x64.Build.0 = Release|Any CPU
 		{54466646-FB5F-4FDD-B31C-87EC6AE399A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{54466646-FB5F-4FDD-B31C-87EC6AE399A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54466646-FB5F-4FDD-B31C-87EC6AE399A5}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -50,6 +60,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{02B9C50B-23FF-436C-87D5-045CF85DFB5A} = {68D9BA5E-EDF4-4ABE-80BF-65EE89345BBF}
 		{E2EE8380-F00B-4698-AFEF-63A8E9B85F3A} = {68D9BA5E-EDF4-4ABE-80BF-65EE89345BBF}
+		{4A1D0B8E-81B4-4E84-A3BC-4A3B3888D909} = {68D9BA5E-EDF4-4ABE-80BF-65EE89345BBF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E8B864C3-965C-4BC5-AC6E-BC5A8F44FFD5}

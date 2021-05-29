@@ -32,7 +32,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
     <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.2" />
     <PackageReference Include="YamlDotNet" Version="11.1.1" />
-</ItemGroup>
+    <ProjectReference Include="..\Stargate.WebApiServ.Data\Stargate.WebApiServ.Data.csproj" />
+  </ItemGroup>
 
   <PropertyGroup>
     <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>

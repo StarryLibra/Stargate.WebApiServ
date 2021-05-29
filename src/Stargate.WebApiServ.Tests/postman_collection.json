@@ -1,0 +1,1012 @@
+{
+	"info": {
+		"_postman_id": "2a93bfbf-a826-4958-99e2-9172f34d9ca5",
+		"name": "StargatePlatform",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Stargate.WebApiServ",
+			"item": [
+				{
+					"name": "Products",
+					"item": [
+						{
+							"name": "获取商品",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/Products",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"Products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "根据 ID 获取商品",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"id\", 1);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/Products/{{id}}",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"Products",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "获取在售商品（同步方式）",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/Products/syncsale",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"Products",
+										"syncsale"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "获取在售商品（异步方式）",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/Products/asyncsale",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"Products",
+										"asyncsale"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "新增商品",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"name\": \"Learning .NET Desktop\",\r\n \"description\": \"A best-selling book covering the fundamentals of .NET Desktop\",\r\n \"IsOnSale\": true\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:44301/Products",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"Products"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "TodoItems",
+					"item": [
+						{
+							"name": "获取所有待办事项",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/api/TodoItems",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"TodoItems"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "按 ID 获取项",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"id\", 1);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/api/TodoItems/{{id}}",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"TodoItems",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "更新现有项",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"id\", 1);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"id\": 1,\r\n \"name\": \"feed fish\",\r\n \"isComplete\": true\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:44301/api/TodoItems/{{id}}",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"TodoItems",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "添加新项",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"name\": \"walk dog\",\r\n \"isComplete\": true\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:44301/api/TodoItems",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"TodoItems"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "删除项",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"id\", 1);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/api/TodoItems/{{id}}",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"TodoItems",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "按 ID 获取项(包含保密内容)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"id\", 1);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/api/TodoItems/{{id}}/over-posting",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"TodoItems",
+										"{{id}}",
+										"over-posting"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "添加新项(包含保密内容)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"name\": \"walk dog\",\r\n \"isComplete\": true,\r\n \"secret\": \"secret string\"\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:44301/api/TodoItems/over-posting",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"TodoItems",
+										"over-posting"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "更新现有项(包含保密内容)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"id\", 1);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"id\": 1,\r\n \"name\": \"feed fish\",\r\n \"isComplete\": true,\r\n \"secret\": \"secret string\"\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:44301/api/TodoItems/{{id}}/over-posting",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"TodoItems",
+										"{{id}}",
+										"over-posting"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Values",
+					"item": [
+						{
+							"name": "列出条目",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"id\", 5);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/api/values/{{id}}",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"values",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "创建",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "text/plain",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "value"
+								},
+								"url": {
+									"raw": "https://localhost:44301/api/values",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"values"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "更新",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"id\", 5);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "value"
+								},
+								"url": {
+									"raw": "https://localhost:44301/api/values/{{id}}",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"values",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "删除",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"id\", 5);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/api/values/{{id}}",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"values",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "WeatherForecast",
+					"item": [
+						{
+							"name": "模拟获取天气预报",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, text/json, text/plain, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/WeatherForecast",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"WeatherForecast"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "处理 Web API 中的错误",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"city\", \"chicago\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "text/html",
+										"description": "application/json, application/xml, text/xml, text/x-yaml, text/html",
+										"type": "text"
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/WeatherForecast/{{city}}",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"WeatherForecast",
+										"{{city}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "欢迎页面",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44301/welcome",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44301",
+							"path": [
+								"welcome"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Swagger文档",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44301/swagger/v1/swagger.json",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44301",
+							"path": [
+								"swagger",
+								"v1",
+								"swagger.json"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "健康检查(HealthCheck)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44301/health",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44301",
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "(迷你)性能监控",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44301/profiler/results-list",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44301",
+							"path": [
+								"profiler",
+								"results-list"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
