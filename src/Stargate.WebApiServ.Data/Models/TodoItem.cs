@@ -1,6 +1,4 @@
-using Stargate.WebApiServ.Web.Swagger;
-
-namespace Stargate.WebApiServ.Web.Models
+namespace Stargate.WebApiServ.Data.Models
 {
     /// <summary>
     /// 示例用的待办事项数据模型

@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Stargate.WebApiServ.Data;
+using Stargate.WebApiServ.Data.Models;
 using Stargate.WebApiServ.Web.Models;
 
 // For more information on archive 'Tutorial: Create a web API with ASP.NET Core',

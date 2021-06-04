@@ -56,6 +56,8 @@ namespace Stargate.WebApiServ.Web
             services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("TodoList"));
             services.AddScoped<ProductsRepository>();
             services.AddDbContext<ProductContext>(opt => opt.UseInMemoryDatabase("ProductInventory"));
+            services.AddDbContext<ApplicationDbContext>(
+                    options => options.UseSqlServer("name=ConnectionStrings:DefaultConnection"));
 
             services.AddMiniProfiler(options => options.RouteBasePath = "/profiler").AddEntityFramework();
 

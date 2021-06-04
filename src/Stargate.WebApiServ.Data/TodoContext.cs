@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Stargate.WebApiServ.Data.Models;
 
-namespace Stargate.WebApiServ.Web.Models
+namespace Stargate.WebApiServ.Data
 {
     /// <summary>
     /// 待办事项数据库上下文
