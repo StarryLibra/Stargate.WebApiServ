@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Stargate.WebApiServ.Data;
 using Stargate.WebApiServ.Web.Controllers;
-using Stargate.WebApiServ.Web.Models;
 
 namespace Stargate.WebApiServ.Tests
 {
