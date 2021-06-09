@@ -4,6 +4,8 @@
 > 供查询数据的 HTTP(S) WebAPI 网站。
 
 ## 特殊功能链接：
+#### Hello World!
+/
 #### 欢迎页面
 /welcome
 #### Swagger文档

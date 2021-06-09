@@ -20,9 +20,9 @@ using Microsoft.Extensions.Logging;
 using LogDashboard;
 using Serilog;
 using Serilog.Events;
+using WebApiContrib.Core.Formatter.Yaml;
 using Stargate.WebApiServ.Data;
 using Stargate.WebApiServ.Data.Repositories;
-using Stargate.WebApiServ.Web.Models;
 using Stargate.WebApiServ.Web.Swagger;
 
 // 因 Swagger 需 XML 注释来完成 WebAPI 文档，故打开了项目级生成 XML 文档编译开关，但本文件无需关心 XML 注释
@@ -39,6 +39,7 @@ namespace Stargate.WebApiServ.Web
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpClient();
@@ -53,11 +54,12 @@ namespace Stargate.WebApiServ.Web
                 options.Providers.Add<GzipCompressionProvider>();
             });
 
-            services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("TodoList"));
-            services.AddScoped<ProductsRepository>();
-            services.AddDbContext<ProductContext>(opt => opt.UseInMemoryDatabase("ProductInventory"));
             services.AddDbContext<ApplicationDbContext>(
                     options => options.UseSqlServer("name=ConnectionStrings:DefaultConnection"));
+            services.AddTransient<IContactRepository, ContactRepository>();
+            services.AddScoped<ProductsRepository>();
+            services.AddDbContext<ProductContext>(opt => opt.UseInMemoryDatabase("ProductInventory"));
+            services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("TodoList"));
 
             services.AddMiniProfiler(options => options.RouteBasePath = "/profiler").AddEntityFramework();
 
@@ -77,7 +79,11 @@ namespace Stargate.WebApiServ.Web
                 }
             });
             services.AddLogDashboard();
-            services.AddControllers(options => options.ReturnHttpNotAcceptable = true)
+            services.AddControllers(options =>
+            {
+                options.RespectBrowserAcceptHeader = true;
+                options.ReturnHttpNotAcceptable = true;
+            })
                 .ConfigureApiBehaviorOptions(options =>
                 {
                     // 在请求中因模型验证失败而自动响应 HTTP 400 请求无效(Bad request)错误时（此时会不进入任何控制器）插入日志记录。
@@ -91,12 +97,14 @@ namespace Stargate.WebApiServ.Web
                         var result = new BadRequestObjectResult(context.ModelState);
                         result.ContentTypes.Add(MediaTypeNames.Application.Json);
                         result.ContentTypes.Add(MediaTypeNames.Application.Xml);
+                        result.ContentTypes.Add("application/x-yaml");
                         return result;
                     };
                 })
                 .AddJsonOptions(options =>
                 {
                     var jsonConfig = Configuration.GetSection("Json");
+                    
                     if (jsonConfig.GetValue<string>("NamingPolicy").Equals("CamelCase", StringComparison.OrdinalIgnoreCase))
                     {
                         options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
@@ -106,13 +114,16 @@ namespace Stargate.WebApiServ.Web
                         options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
                     if (jsonConfig.GetValue<bool>("RelaxedEscaping", defaultValue: true))
                         options.JsonSerializerOptions.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+                    options.JsonSerializerOptions.AllowTrailingCommas = jsonConfig.GetValue<bool>("AllowTrailingCommas", defaultValue: false);
                     options.JsonSerializerOptions.IgnoreNullValues = jsonConfig.GetValue<bool>("IgnoreNullValues", defaultValue: true);
                     options.JsonSerializerOptions.WriteIndented = jsonConfig.GetValue<bool>("WriteIndented", defaultValue: false);
+
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                     options.JsonSerializerOptions.Converters.Add(new SystemTextJsonConvert.DateTimeMyConverter());
                     options.JsonSerializerOptions.Converters.Add(new SystemTextJsonConvert.DateTimeNullableMyConverter());
                 })
-                .AddXmlDataContractSerializerFormatters();
+                .AddXmlDataContractSerializerFormatters()
+                .AddYamlFormatters();
             services.AddHealthChecks();
         }
 
@@ -221,6 +232,10 @@ namespace Stargate.WebApiServ.Web
                             Errors = healthReport.Entries.Select(e => new { e.Key, Value = e.Value.Status.ToString() })
                         }));
                     }
+                });
+                endpoints.MapGet("/", async context =>
+                {
+                    await context.Response.WriteAsync("Hello World!");
                 });
                 endpoints.MapControllers();
             });

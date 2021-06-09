@@ -9,6 +9,476 @@
 			"name": "Stargate.WebApiServ",
 			"item": [
 				{
+					"name": "Contacts",
+					"item": [
+						{
+							"name": "获取通讯录",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/api/contacts",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"contacts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "按 ID 获取某一通讯记录项",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"guid\", \"aabe5d5b-54c1-49e0-8e7c-9b31d82a1f7c\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/api/contacts/{{guid}}",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"contacts",
+										"{{guid}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "添加新的通讯录记录项",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"firstName\": \"Libra\",\r\n \"lastName\": \"Starry\"\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:44301/api/contacts",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"contacts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "更新现有通讯录记录项",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"guid\", \"d8c0e0b9-b7a2-4449-88e8-d52bdfea4bf5\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"id\": \"d8c0e0b9-b7a2-4449-88e8-d52bdfea4bf5\",\r\n \"firstName\": \"Libra\",\r\n \"lastName\": \"Starry\"\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:44301/api/contacts/{{guid}}",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"contacts",
+										"{{guid}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "删除通讯录记录项",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"guid\", \"d8c0e0b9-b7a2-4449-88e8-d52bdfea4bf5\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/api/contacts/{{guid}}",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"contacts",
+										"{{guid}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "ContactsConvention",
+					"item": [
+						{
+							"name": "获取通讯录",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/api/contactsconvention",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"contactsconvention"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "按 ID 获取某一通讯记录项",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"guid\", \"aabe5d5b-54c1-49e0-8e7c-9b31d82a1f7c\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/api/contactsconvention/{{guid}}",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"contactsconvention",
+										"{{guid}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "添加新的通讯录记录项",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"firstName\": \"Libra\",\r\n \"lastName\": \"Starry\"\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:44301/api/contactsconvention",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"contactsconvention"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "更新现有通讯录记录项",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"guid\", \"d8c0e0b9-b7a2-4449-88e8-d52bdfea4bf5\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"id\": \"d8c0e0b9-b7a2-4449-88e8-d52bdfea4bf5\",\r\n \"firstName\": \"Libra\",\r\n \"lastName\": \"Starry\"\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:44301/api/contactsconvention/{{guid}}",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"contactsconvention",
+										"{{guid}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "删除通讯录记录项",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"guid\", \"d8c0e0b9-b7a2-4449-88e8-d52bdfea4bf5\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/api/contactsconvention/{{guid}}",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"contactsconvention",
+										"{{guid}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Products",
 					"item": [
 						{
@@ -920,6 +1390,54 @@
 									"path": [
 										"WeatherForecast",
 										"{{city}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "模拟获取天气预报出错",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, text/json, text/plain, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/WeatherForecast/error",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"WeatherForecast",
+										"error"
 									]
 								}
 							},
