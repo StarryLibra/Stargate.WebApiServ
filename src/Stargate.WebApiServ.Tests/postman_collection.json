@@ -1105,6 +1105,136 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/api/values",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"values"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "列出条目 (FormatFilter)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/api/values?format=xml",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"values"
+									],
+									"query": [
+										{
+											"key": "format",
+											"value": "xml"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "读取",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
 											"pm.globals.set(\"id\", 5);"
 										],
 										"type": "text/javascript"
@@ -1156,6 +1286,138 @@
 										"api",
 										"values",
 										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "读取 (FormatFilter)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"id\", 5);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/api/values/{{id}}.xml",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"values",
+										"{{id}}.xml"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "读取 (FormatFilter param)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"id\", 5);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/api/values/{{id}}?format=xml",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"values",
+										"{{id}}"
+									],
+									"query": [
+										{
+											"key": "format",
+											"value": "xml"
+										}
 									]
 								}
 							},

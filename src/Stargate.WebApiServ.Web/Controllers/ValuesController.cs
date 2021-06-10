@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
+// 关于通过 FormatFilter 进行内容协商参考博文“How to format response data as XML or JSON, based on the request URL in ASP.NET Core”
+// 访问：https://andrewlock.net/formatting-response-data-as-xml-or-json-based-on-the-url-in-asp-net-core/
+
 namespace Stargate.WebApiServ.Web.Controllers
 {
     /// <summary>
@@ -20,8 +23,9 @@ namespace Stargate.WebApiServ.Web.Controllers
         /// <remarks>
         /// 请求模式：
         /// GET /api/values
+        /// GET /api/values
         /// </remarks>
-        [HttpGet]
+        [HttpGet, FormatFilter]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
@@ -36,7 +40,7 @@ namespace Stargate.WebApiServ.Web.Controllers
         /// 请求模式：
         /// GET /api/values/{id}
         /// </remarks>
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), HttpGet("{id}.{format}"), FormatFilter]
         public string Get(int id)
         {
             return "value";
