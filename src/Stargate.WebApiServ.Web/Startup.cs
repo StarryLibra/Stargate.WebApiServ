@@ -23,6 +23,7 @@ using Serilog.Events;
 using WebApiContrib.Core.Formatter.Yaml;
 using Stargate.WebApiServ.Data;
 using Stargate.WebApiServ.Data.Repositories;
+using Stargate.WebApiServ.Web.Services;
 using Stargate.WebApiServ.Web.Swagger;
 
 // 因 Swagger 需 XML 注释来完成 WebAPI 文档，故打开了项目级生成 XML 文档编译开关，但本文件无需关心 XML 注释
@@ -119,12 +120,15 @@ namespace Stargate.WebApiServ.Web
                     options.JsonSerializerOptions.WriteIndented = jsonConfig.GetValue<bool>("WriteIndented", defaultValue: false);
 
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                    options.JsonSerializerOptions.Converters.Add(new SystemTextJsonConvert.DateTimeMyConverter());
-                    options.JsonSerializerOptions.Converters.Add(new SystemTextJsonConvert.DateTimeNullableMyConverter());
+                    options.JsonSerializerOptions.Converters.Add(new Libraries.SystemTextJsonConvert.DateTimeMyConverter());
+                    options.JsonSerializerOptions.Converters.Add(new Libraries.SystemTextJsonConvert.DateTimeNullableMyConverter());
                 })
                 .AddXmlDataContractSerializerFormatters()
                 .AddYamlFormatters();
             services.AddHealthChecks();
+
+            services.AddHostedService<TimedHostedService>();
+            services.AddHostedService<GracePeriodManagerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

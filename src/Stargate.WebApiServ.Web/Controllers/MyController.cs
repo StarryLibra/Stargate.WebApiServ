@@ -1,6 +1,6 @@
 using Stargate.WebApiServ.Data;
 
-// For more information on archive 'DbContext Lifetime, Configuration, and Initialization'.
+// For more information on archive 'DbContext Lifetime, Configuration, and Initialization',
 // visit https://docs.microsoft.com/zh-cn/ef/core/dbcontext-configuration/
 
 namespace Stargate.WebApiServ.Web.Controllers

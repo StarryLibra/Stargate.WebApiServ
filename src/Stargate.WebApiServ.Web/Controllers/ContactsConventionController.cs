@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Stargate.WebApiServ.Data.Models;
 using Stargate.WebApiServ.Data.Repositories;
 
-// For more information on archive 'Use web API conventions'.
+// For more information on archive 'Use web API conventions',
 // visit https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/conventions?view=aspnetcore-5.0
 // sample code：https://github.com/dotnet/AspNetCore.Docs/tree/main/aspnetcore/web-api/advanced/conventions/sample
 

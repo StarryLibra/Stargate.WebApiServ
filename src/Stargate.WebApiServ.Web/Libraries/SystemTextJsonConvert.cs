@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Stargate.WebApiServ.Web.SystemTextJsonConvert
+namespace Stargate.WebApiServ.Web.Libraries.SystemTextJsonConvert
 {
     /// <summary>
     /// <c>DateTime</c> 结构的 JSON 序列化类自定义转换器

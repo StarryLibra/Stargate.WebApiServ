@@ -55,6 +55,7 @@ namespace Stargate.WebApiServ.Web
                 .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.UseShutdownTimeout(TimeSpan.FromSeconds(5));     // 避免在主进程退出时服务能及时做相应处理
                     webBuilder.UseStartup<Startup>();
                     webBuilder.UseKestrel(options => options.AllowSynchronousIO = true);
                 });

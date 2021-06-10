@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Stargate.WebApiServ.Data.Models;
 using Stargate.WebApiServ.Data.Repositories;
 
-// For more information on archive 'Controller action return types in ASP.NET Core web API'.
+// For more information on archive 'Controller action return types in ASP.NET Core web API',
 // visit https://docs.microsoft.com/en-us/aspnet/core/web-api/action-return-types?view=aspnetcore-5.0
 // sample code：https://github.com/dotnet/AspNetCore.Docs/tree/main/aspnetcore/web-api/action-return-types/samples
 
