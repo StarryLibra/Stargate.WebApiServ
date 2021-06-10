@@ -60,6 +60,7 @@ namespace Stargate.WebApiServ.Web
             services.AddTransient<IContactRepository, ContactRepository>();
             services.AddScoped<ProductsRepository>();
             services.AddDbContext<ProductContext>(opt => opt.UseInMemoryDatabase("ProductInventory"));
+            services.AddDbContext<SampleContext>(options => options.UseInMemoryDatabase("SampleData"));
             services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("TodoList"));
 
             services.AddMiniProfiler(options => options.RouteBasePath = "/profiler").AddEntityFramework();

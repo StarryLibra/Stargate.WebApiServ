@@ -1,9 +1,12 @@
 using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Filters;
+using Stargate.WebApiServ.Data;
 
 #pragma warning disable CS1591
 namespace Stargate.WebApiServ.Web
@@ -36,7 +39,9 @@ namespace Stargate.WebApiServ.Web
             try
             {
                 Log.ForContext<Program>().Information("Starting web host...");
-                CreateHostBuilder(args).Build().Run();
+                var host = CreateHostBuilder(args).Build();
+                SeedDatabase(host);
+                host.Run();
             }
             catch (Exception ex)
             {
@@ -59,5 +64,28 @@ namespace Stargate.WebApiServ.Web
                     webBuilder.UseStartup<Startup>();
                     webBuilder.UseKestrel(options => options.AllowSynchronousIO = true);
                 });
+
+        private static void SeedDatabase(IHost host)
+        {
+            var scopeFactory = host.Services.GetRequiredService<IServiceScopeFactory>();
+
+            using (var scope = scopeFactory.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<SampleContext>();
+
+                if (context.Database.EnsureCreated())
+                {
+                    try
+                    {
+                        SeedData.Initialize(context);
+                    }
+                    catch (Exception ex)
+                    {
+                        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                        logger.LogError(ex, "A database seeding error occurred.");
+                    }
+                }
+            }
+        }
     }
 }

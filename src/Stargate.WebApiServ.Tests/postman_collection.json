@@ -9,6 +9,261 @@
 			"name": "Stargate.WebApiServ",
 			"item": [
 				{
+					"name": "Authors",
+					"item": [
+						{
+							"name": "获取作者清单",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/api/authors",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"authors"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "通过姓名的片段部分搜索作者",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/api/authors/search?namelike=th",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"authors",
+										"search"
+									],
+									"query": [
+										{
+											"key": "namelike",
+											"value": "th"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "通过别名获取作者",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/api/authors/RickAndMSFT",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"authors",
+										"RickAndMSFT"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "获取本控制器的“关于”信息",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/api/authors/about",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"authors",
+										"about"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "获取本控制器的版本信息",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/api/authors/version",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"api",
+										"authors",
+										"version"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Contacts",
 					"item": [
 						{
@@ -479,10 +734,448 @@
 					]
 				},
 				{
+					"name": "Fruits",
+					"item": [
+						{
+							"name": "获取水果列表",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/Fruits",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"Fruits"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "根据 ID 获取水果",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"id\", 1);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/Fruits/{{id}}",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"Fruits",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "新添水果",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"name\": \"Banana\"\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:44301/Fruits",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"Fruits"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "更新现有水果",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"id\", 1);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"id\": 1,\r\n \"name\": \"Pear\"\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:44301/Fruits/{{id}}",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"Fruits",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "删除水果",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"id\", 1);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/Fruits/{{id}}",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"Fruits",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "People",
+					"item": [
+						{
+							"name": "获取人员列表",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/People",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"People"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "根据 ID 获取人员",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"id\", 1);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"description": "application/json, application/xml, text/xml, text/x-yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Encoding",
+										"value": "gzip, deflate",
+										"description": "gzip, deflate, br",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/People/{{id}}",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"People",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "新增人员",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"name\": \"Starry Libra\"\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:44301/People",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"People"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "更新现有人员",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"id\", 1);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"id\": 1,\r\n \"name\": \"Scott Starry\"\r\n}"
+								},
+								"url": {
+									"raw": "https://localhost:44301/People/{{id}}",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"People",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "删除人员",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"id\", 1);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "https://localhost:44301/People/{{id}}",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44301",
+									"path": [
+										"People",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Products",
 					"item": [
 						{
-							"name": "获取商品",
+							"name": "获取商品列表",
 							"request": {
 								"method": "GET",
 								"header": [
@@ -1706,6 +2399,22 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "Hello World!",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44301",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44301"
+						}
+					},
+					"response": []
 				},
 				{
 					"name": "欢迎页面",

@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -28,16 +29,17 @@ namespace Stargate.WebApiServ.Web.Services
             _logger.LogDebug($"GracePeriodManagerService is starting.");
 
             stoppingToken.Register(() =>
-                _logger.LogDebug($" GracePeriod background task is stopping."));
+                _logger.LogDebug($"GracePeriod background task is stopping."));
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogDebug($"GracePeriod task doing background work.");
+                //_logger.LogDebug($"GracePeriod task doing background work at {DateTime.UtcNow:s}.");
+                _logger.LogDebug("GracePeriod task doing background work at {0:s}.", DateTime.UtcNow);
 
                 var count = Interlocked.Increment(ref executionCount);
                 // do what you want
 
-                if (count < 5)
+                if (count < 10)
                     await Task.Delay(_settings.CheckUpdateTime, stoppingToken);
                 else
                     await this.StopAsync(stoppingToken);

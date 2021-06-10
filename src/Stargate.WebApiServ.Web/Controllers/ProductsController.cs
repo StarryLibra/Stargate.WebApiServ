@@ -31,7 +31,7 @@ namespace Stargate.WebApiServ.Web.Controllers
 
         #region snippet_Get
         /// <summary>
-        /// 获取商品。
+        /// 获取商品列表。
         /// </summary>
         /// <returns>商品列表。</returns>
         [HttpGet]
