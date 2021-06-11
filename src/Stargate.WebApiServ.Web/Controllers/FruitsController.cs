@@ -57,7 +57,7 @@ namespace Stargate.WebApiServ.Web.Controllers
         /// <param name="fruit">新水果</param>
         /// <returns>新增后的水果</returns>
         [HttpPost]
-        public async Task<ActionResult<Fruit>> Create(Fruit fruit)
+        public async Task<ActionResult<Fruit>> Create([FromBody] Fruit fruit)
         {
             _context.Fruits.Add(fruit);
             await _context.SaveChangesAsync();
@@ -72,7 +72,7 @@ namespace Stargate.WebApiServ.Web.Controllers
         /// <param name="fruit">水果对象</param>
         /// <returns>处理更改的执行结果</returns>
          [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Fruit fruit)
+        public async Task<IActionResult> Update(int id, [FromBody] Fruit fruit)
         {
             if (id != fruit.Id)
             {

@@ -23,7 +23,6 @@ namespace Stargate.WebApiServ.Web.Controllers
         /// <remarks>
         /// 请求模式：
         /// GET /api/values
-        /// GET /api/values
         /// </remarks>
         [HttpGet, FormatFilter]
         public IEnumerable<string> Get()

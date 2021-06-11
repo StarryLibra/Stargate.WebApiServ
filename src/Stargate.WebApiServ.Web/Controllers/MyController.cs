@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Stargate.WebApiServ.Data;
 
 // For more information on archive 'DbContext Lifetime, Configuration, and Initialization',
@@ -8,6 +9,7 @@ namespace Stargate.WebApiServ.Web.Controllers
     /// <summary>
     /// ASP.NET Core 依赖关系注入中的 DbContext
     /// </summary>
+    [Route("[controller]")]
     public class MyController
     {
         private readonly ApplicationDbContext _context;

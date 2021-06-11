@@ -81,7 +81,7 @@ namespace Stargate.WebApiServ.Web.Controllers
         /// PUT /api/TodoItems/{id}
         /// {
         ///   "id": #number#,
-        ///   "name":  #string#,
+        ///   "name": #string#,
         ///   "isComplete": #boolean#
         /// }
         /// </remarks>
@@ -127,7 +127,7 @@ namespace Stargate.WebApiServ.Web.Controllers
         /// 请求模式：
         /// POST /api/TodoItems
         /// {
-        ///   "name":  #string#,
+        ///   "name": #string#,
         ///   "isComplete": #boolean#
         /// }
         /// </remarks>

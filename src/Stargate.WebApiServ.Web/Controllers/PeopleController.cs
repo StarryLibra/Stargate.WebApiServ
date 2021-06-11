@@ -57,7 +57,7 @@ namespace Stargate.WebApiServ.Web.Controllers
         /// <param name="person">新人员</param>
         /// <returns>新增后的人员</returns>
         [HttpPost]
-        public async Task<ActionResult<Person>> Create(Person person)
+        public async Task<ActionResult<Person>> Create([FromBody] Person person)
         {
             _context.People.Add(person);
             await _context.SaveChangesAsync();
@@ -72,7 +72,7 @@ namespace Stargate.WebApiServ.Web.Controllers
         /// <param name="person">人员对象</param>
         /// <returns>处理更改的执行结果</returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Person person)
+        public async Task<IActionResult> Update(int id, [FromBody] Person person)
         {
             if (id != person.Id)
             {
