@@ -44,6 +44,7 @@ namespace Stargate.WebApiServ.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpClient();
+            
             services.AddResponseCompression(options =>
             {
                 options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]

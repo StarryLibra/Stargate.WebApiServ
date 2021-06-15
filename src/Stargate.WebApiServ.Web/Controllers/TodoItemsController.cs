@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Mapster;
 using Stargate.WebApiServ.Data;
 using Stargate.WebApiServ.Data.Models;
 using Stargate.WebApiServ.Web.Models;
@@ -42,7 +43,7 @@ namespace Stargate.WebApiServ.Web.Controllers
         public async Task<ActionResult<IEnumerable<TodoItemDTO>>> GetTodoItems()
         {
             return await _context.TodoItems
-                .Select(x => ItemToDTO(x))
+                .ProjectToType<TodoItemDTO>()
                 .ToListAsync();
         }
 
@@ -67,7 +68,7 @@ namespace Stargate.WebApiServ.Web.Controllers
                 return NotFound();
             }
 
-            return ItemToDTO(todoItem);
+            return todoItem.Adapt<TodoItemDTO>();
         }
 
         /// <summary>
@@ -103,8 +104,7 @@ namespace Stargate.WebApiServ.Web.Controllers
                 return NotFound();
             }
 
-            todoItem.Name = todoItemDTO.Name;
-            todoItem.IsComplete = todoItemDTO.IsComplete;
+            todoItemDTO.Adapt(todoItem);
 
             try
             {
@@ -137,16 +137,12 @@ namespace Stargate.WebApiServ.Web.Controllers
         [HttpPost]
         public async Task<ActionResult<TodoItemDTO>> CreateTodoItem(TodoItemDTO todoItemDTO)
         {
-            var todoItem = new TodoItem
-            {
-                IsComplete = todoItemDTO.IsComplete,
-                Name = todoItemDTO.Name
-            };
+            var todoItem = todoItemDTO.Adapt<TodoItem>();
 
             _context.TodoItems.Add(todoItem);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, ItemToDTO(todoItem));
+            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem.Adapt<TodoItemDTO>());
         }
 
         /// <summary>
@@ -177,15 +173,7 @@ namespace Stargate.WebApiServ.Web.Controllers
             return Ok();
         }
 
-        private bool TodoItemExists(long id) =>
-            _context.TodoItems.Any(e => e.Id == id);
-
-        private static TodoItemDTO ItemToDTO(TodoItem todoItem) => new TodoItemDTO
-        {
-            Id = todoItem.Id,
-            Name = todoItem.Name,
-            IsComplete = todoItem.IsComplete
-        };
+        private bool TodoItemExists(long id) => _context.TodoItems.Any(e => e.Id == id);
 
         #region These methods are just for testing populating the secret field
 
