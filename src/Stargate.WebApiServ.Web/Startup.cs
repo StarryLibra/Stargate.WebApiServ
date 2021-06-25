@@ -131,6 +131,7 @@ namespace Stargate.WebApiServ.Web
 
             services.AddHostedService<TimedHostedService>();
             services.AddHostedService<GracePeriodManagerService>();
+            //services.AddHostedService<GracefullyShutdownWorkerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

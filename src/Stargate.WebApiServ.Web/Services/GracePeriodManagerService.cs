@@ -33,23 +33,24 @@ namespace Stargate.WebApiServ.Web.Services
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                //_logger.LogDebug($"GracePeriod task doing background work at {DateTime.UtcNow:s}.");
-                _logger.LogDebug("GracePeriod task doing background work at {0:s}.", DateTime.UtcNow);
+                if (executionCount <= 10)
+                    _logger.LogDebug("GracePeriod task doing background work at {0:s}. ({1}th/top10 in LogDebug)", DateTime.UtcNow, executionCount);
+                else
+                    _logger.LogTrace("GracePeriod task doing background work at {0:s}.", DateTime.UtcNow);
 
                 var count = Interlocked.Increment(ref executionCount);
                 // do what you want
 
-                if (count < 10)
-                    await Task.Delay(_settings.CheckUpdateTime, stoppingToken);
-                else
-                    await this.StopAsync(stoppingToken);
+                await Task.Delay(_settings.CheckUpdateTime, stoppingToken);
             }
+
+            _logger.LogDebug($"GracePeriod background task is stopping.");
         }
     }
 
 
     public class OrderingBackgroundSettings
     {
-        public int CheckUpdateTime { get; set; } = 3000;
+        public TimeSpan CheckUpdateTime { get; set; } = TimeSpan.FromMilliseconds(3000);
     }
 }

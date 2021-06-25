@@ -56,6 +56,8 @@ namespace Stargate.WebApiServ.Web.Services
 
         public void Dispose()
         {
+            _logger.LogInformation("Timed Hosted Service is disposing.");
+
             _timer?.Dispose();
         }       
     }
