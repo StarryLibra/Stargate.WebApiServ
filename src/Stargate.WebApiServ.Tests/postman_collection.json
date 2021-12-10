@@ -2481,14 +2481,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://localhost:44301/profiler/results-list",
+							"raw": "https://localhost:44301/mini-profiler-resources/results-list",
 							"protocol": "https",
 							"host": [
 								"localhost"
 							],
 							"port": "44301",
 							"path": [
-								"profiler",
+								"mini-profiler-resources",
 								"results-list"
 							]
 						}

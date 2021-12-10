@@ -1,9 +1,8 @@
-namespace Stargate.WebApiServ.Data.Models
+namespace Stargate.WebApiServ.Data.Models;
+
+public class Contact
 {
-    public class Contact
-    {
-        public string ID { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-    }
+    public string ID { get; set; } = default!;
+    public string FirstName { get; set; } = String.Empty;
+    public string LastName { get; set; } = String.Empty;
 }

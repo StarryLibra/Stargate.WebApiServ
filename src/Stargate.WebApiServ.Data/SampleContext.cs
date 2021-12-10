@@ -1,16 +1,12 @@
-using Microsoft.EntityFrameworkCore;
-using Stargate.WebApiServ.Data.Models;
+namespace Stargate.WebApiServ.Data;
 
-namespace Stargate.WebApiServ.Data
+public class SampleContext : DbContext
 {
-    public class SampleContext : DbContext
+    public SampleContext(DbContextOptions<SampleContext> options)
+        : base(options)
     {
-        public SampleContext(DbContextOptions<SampleContext> options)
-            : base(options)
-        {
-        }
-
-        public DbSet<Fruit> Fruits { get; set; }
-        public DbSet<Person> People { get; set; }
     }
+
+    public DbSet<Fruit> Fruits { get; set; } = null!;
+    public DbSet<Person> People { get; set; } = null!;
 }

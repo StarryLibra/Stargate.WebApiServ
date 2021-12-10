@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "adminer": "StartWithoutDebugging",
+        "sqldata": "StartWithoutDebugging",
+        "stargate.webapiserv.web": "StartDebugging"
+      }
+    }
+  }
+}

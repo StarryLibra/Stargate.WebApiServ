@@ -7,7 +7,7 @@ namespace Stargate.WebApiServ.Tests
     [TestClass]
     public class ValuesUnitTests
     {
-        private static ValuesController _controller;
+        private static ValuesController _controller = default!;
 
         [ClassInitialize]
         public static void Initialize(TestContext testContext)
