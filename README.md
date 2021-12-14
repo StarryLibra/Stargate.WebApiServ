@@ -13,7 +13,8 @@
 /swagger/index.html
 /swagger/v1/swagger.json
 #### 健康检查(HealthCheck)
-/health
+/healthz
+/healthz/ready
 #### 日志面板
 /logdashboard
 #### (迷你)性能监控

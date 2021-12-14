@@ -1,7 +1,8 @@
-global using Microsoft.AspNetCore.Mvc;
+global using global::Microsoft.AspNetCore.Mvc;
 global using Stargate.WebApiServ.Data;
 global using Stargate.WebApiServ.Data.Models;
 using System.Net.Mime;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Encodings.Web;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using LogDashboard;
 using Serilog;
 using Serilog.Events;
@@ -55,7 +57,7 @@ try
     builder.Host.UseSerilog();
 
     // Wait 30 seconds for graceful shutdown.
-    builder.Host.ConfigureHostOptions(o => o.ShutdownTimeout = TimeSpan.FromSeconds(30));
+    //builder.Host.ConfigureHostOptions(o => o.ShutdownTimeout = TimeSpan.FromSeconds(30));
 
     builder.Services.AddResponseCompression(options =>
     {
@@ -114,7 +116,7 @@ try
             options.JsonSerializerOptions.Converters.Add(new MyDateTimeConverter());
             options.JsonSerializerOptions.Converters.Add(new MyDateTimeNullableConverter());
         })
-        .AddXmlDataContractSerializerFormatters()
+        .AddXmlDataContractSerializerFormatters()   // 不使用 .AddXmlSerializerFormatters() 是因为会直接忽略 dynamic/object 类型的属性
         .AddYamlFormatters();
 
     builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer("name=ConnectionStrings:DefaultConnection"));
@@ -129,7 +131,11 @@ try
     Uri.TryCreate(config["AppSettings:AuthServer"], UriKind.RelativeOrAbsolute, out var authServerUri);
     builder.Services.AddMySwaggerGen(authServerUri);
 
-    builder.Services.AddHealthChecks();
+    builder.Services.AddHealthChecks()
+        .AddDbContextCheck<ProductContext>()
+        .AddDbContextCheck<SampleContext>()
+        .AddDbContextCheck<TodoContext>()
+        .AddCheck<StartupHealthCheck>("Startup", tags: new[] { "ready" });
 
     builder.Services.AddLogDashboard();
 
@@ -142,23 +148,25 @@ try
     builder.Services.AddHostedService<TimedHostedService>();
     builder.Services.AddHostedService<GracePeriodManagerService>();
     //services.AddHostedService<GracefullyShutdownWorkerService>();
+    builder.Services.AddHostedService<StartupBackgroundService>();
+    builder.Services.AddSingleton<StartupHealthCheck>();
     #endregion
 
     var app = builder.Build();
 
-    //app.Lifetime.ApplicationStarted.Register(() => Log.Information("Processing after application lifetime has started."));
-    //app.Lifetime.ApplicationStopping.Register(() => Log.Information("Processing in application lifetime is on stopping."));
-    //app.Lifetime.ApplicationStopped.Register(() => Log.Information("Processing after application lifetime had stoped."));
+    //app.Lifetime.ApplicationStarted.Register(() => app.Logger.LogInformation("Process things after application lifetime has started."));
+    //app.Lifetime.ApplicationStopping.Register(() => app.Logger.LogInformation("Process things in application lifetime is on stopping."));
+    //app.Lifetime.ApplicationStopped.Register(() => app.Logger.LogInformation("Process things after application lifetime had stoped."));
 
     // Configure the HTTP request pipeline.
     #region
     if (app.Environment.IsDevelopment())
     {
-        app.UseSwagger();
-        app.UseMySwaggerUI();
-
         // 开发人员异常页面，参考：https://www.cnblogs.com/cool2feel/p/11453897.html
         app.UseDeveloperExceptionPage(new DeveloperExceptionPageOptions { SourceCodeLineCount = 10 });
+
+        app.UseSwagger();
+        app.UseMySwaggerUI();
     }
     else
     {
@@ -172,7 +180,7 @@ try
                 Source = feature?.Error.Source ?? "未指明异常抛出源。"
             };
 
-            Log.Error(feature?.Error, resp.Message);
+            app.Logger.LogError(feature?.Error, message: resp.Message);
 
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             context.Response.ContentType = "application/json; charset=utf-8";
@@ -235,20 +243,21 @@ try
     app.UseWelcomePage("/welcome");
 
     app.MapGet("/", () => "Hello World!");
-    app.MapHealthChecks("/health", new HealthCheckOptions
+    app.MapHealthChecks("/healthz", new HealthCheckOptions { ResponseWriter = WriteResponse });
+    app.MapHealthChecks("/healthz/ready", new HealthCheckOptions { Predicate = healthCheck => healthCheck.Tags.Contains("ready") });
+    app.MapGet("/weatherforecastminimal", () =>
     {
-        // 自定义健康检查(HealthCheck)的输出
-        // 参考：https://www.cnblogs.com/yyfh/p/11787434.html
-        ResponseWriter = (context, healthReport) =>
-        {
-            context.Response.ContentType = "application/json; charset=utf-8";
-            return context.Response.WriteAsync(JsonSerializer.Serialize(new
-            {
-                Status = healthReport.Status.ToString(),
-                Errors = healthReport.Entries.Select(e => new { e.Key, Value = e.Value.Status.ToString() })
-            }));
-        }
-    });
+        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
+        var forecast = Enumerable.Range(1, 5).Select(index =>
+            new WeatherForecastMinimal
+            (
+                DateTime.Now.AddDays(index),
+                Random.Shared.Next(-20, 55),
+                summaries[Random.Shared.Next(summaries.Length)]
+            ))
+            .ToArray();
+        return forecast;
+    }).WithName("GetWeatherForecastMinimal");
     app.MapControllers();
     #endregion
 
@@ -282,4 +291,51 @@ static void SeedDatabase(IHost host)
             Log.ForContext<Program>().Error(ex, "A database seeding error occurred.");
         }
     }
+}
+
+static Task WriteResponse(HttpContext context, HealthReport healthReport)
+{
+    context.Response.ContentType = "application/json; charset=utf-8";
+
+    var options = new JsonWriterOptions { Indented = true };
+
+    using var memoryStream = new MemoryStream();
+    using (var jsonWriter = new Utf8JsonWriter(memoryStream, options))
+    {
+        jsonWriter.WriteStartObject();
+        jsonWriter.WriteString("status", healthReport.Status.ToString());
+        jsonWriter.WriteStartObject("results");
+
+        foreach (var healthReportEntry in healthReport.Entries)
+        {
+            jsonWriter.WriteStartObject(healthReportEntry.Key);
+            jsonWriter.WriteString("status",
+                healthReportEntry.Value.Status.ToString());
+            jsonWriter.WriteString("description",
+                healthReportEntry.Value.Description);
+            jsonWriter.WriteStartObject("data");
+
+            foreach (var item in healthReportEntry.Value.Data)
+            {
+                jsonWriter.WritePropertyName(item.Key);
+
+                JsonSerializer.Serialize(jsonWriter, item.Value,
+                    item.Value?.GetType() ?? typeof(object));
+            }
+
+            jsonWriter.WriteEndObject();
+            jsonWriter.WriteEndObject();
+        }
+
+        jsonWriter.WriteEndObject();
+        jsonWriter.WriteEndObject();
+    }
+
+    return context.Response.WriteAsync(
+        Encoding.UTF8.GetString(memoryStream.ToArray())
+    );
+}
+internal record WeatherForecastMinimal(DateTime Date, int TemperatureC, string? Summary)
+{
+    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
