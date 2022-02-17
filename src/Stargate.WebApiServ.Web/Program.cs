@@ -1,7 +1,6 @@
 global using global::Microsoft.AspNetCore.Mvc;
 global using Stargate.WebApiServ.Data;
 global using Stargate.WebApiServ.Data.Models;
-using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -16,8 +15,10 @@ using LogDashboard;
 using Serilog;
 using Serilog.Events;
 using Serilog.Filters;
-using WebApiContrib.Core.Formatter.Yaml;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 using Stargate.WebApiServ.Data.Repositories;
+using Stargate.WebApiServ.Web.Libraries;
 using Stargate.WebApiServ.Web.Libraries.JsonSerialization;
 using Stargate.WebApiServ.Web.Services;
 using Stargate.WebApiServ.Web.Swagger;
@@ -50,8 +51,7 @@ try
     
     var builder = WebApplication.CreateBuilder(args);
 
-    // Add services to the container.
-    #region
+    #region Add services to the container.
 
     // Serilog logging for ASP.NET Core, visit https://github.com/serilog/serilog-aspnetcore
     builder.Host.UseSerilog();
@@ -76,20 +76,22 @@ try
     {
         options.RespectBrowserAcceptHeader = true;
         options.ReturnHttpNotAcceptable = true;
+
+        options.InputFormatters.Add(new YamlInputFormatter(
+            new DeserializerBuilder().WithNamingConvention(namingConvention: CamelCaseNamingConvention.Instance).Build()
+        ));
+        options.OutputFormatters.Add(new YamlOutputFormatter(
+            new SerializerBuilder().WithNamingConvention(namingConvention: CamelCaseNamingConvention.Instance).Build()
+        ));
     })
         .ConfigureApiBehaviorOptions(options =>
         {
             // 在请求中因模型验证失败而自动响应“HTTP 400 请求无效(Bad request)”错误时（此时会不进入任何控制器）插入日志记录。
-            // 参考：https://github.com/dotnet/AspNetCore.Docs/issues/12157、 https://docs.microsoft.com/en-us/aspnet/core/web-api/handle-errors?view=aspnetcore-5.0
+            // 参考：https://github.com/dotnet/AspNetCore.Docs/issues/12157、 https://docs.microsoft.com/en-us/aspnet/core/web-api/handle-errors?view=aspnetcore-6.0
             options.InvalidModelStateResponseFactory = context =>
             {
                 Log.Error("请求的模型验证失败，响应 HTTP 400 请求无效(Bad request)错误。");
-
-                var result = new BadRequestObjectResult(context.ModelState);
-                result.ContentTypes.Add(MediaTypeNames.Application.Json);
-                result.ContentTypes.Add(MediaTypeNames.Application.Xml);
-                result.ContentTypes.Add("application/x-yaml");
-                return result;
+                return new BadRequestObjectResult(context.ModelState);
             };
         })
         .AddJsonOptions(options =>
@@ -116,8 +118,11 @@ try
             options.JsonSerializerOptions.Converters.Add(new MyDateTimeConverter());
             options.JsonSerializerOptions.Converters.Add(new MyDateTimeNullableConverter());
         })
-        .AddXmlDataContractSerializerFormatters()   // 不使用 .AddXmlSerializerFormatters() 是因为会直接忽略 dynamic/object 类型的属性
-        .AddYamlFormatters();
+        .AddXmlDataContractSerializerFormatters()   // 不使用 .AddXmlSerializerFormatters() 是因为其会直接忽略 dynamic/object 类型的属性
+        .AddFormatterMappings(mappings =>
+        {
+            mappings.SetMediaTypeMappingForFormat("yaml", "application/x-yaml");
+        });
 
     builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer("name=ConnectionStrings:DefaultConnection"));
     builder.Services.AddTransient<IContactRepository, ContactRepository>();
@@ -158,8 +163,7 @@ try
     //app.Lifetime.ApplicationStopping.Register(() => app.Logger.LogInformation("Process things in application lifetime is on stopping."));
     //app.Lifetime.ApplicationStopped.Register(() => app.Logger.LogInformation("Process things after application lifetime had stoped."));
 
-    // Configure the HTTP request pipeline.
-    #region
+    #region Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {
         // 开发人员异常页面，参考：https://www.cnblogs.com/cool2feel/p/11453897.html
@@ -299,8 +303,8 @@ static Task WriteResponse(HttpContext context, HealthReport healthReport)
 
     var options = new JsonWriterOptions { Indented = true };
 
-    using var memoryStream = new MemoryStream();
-    using (var jsonWriter = new Utf8JsonWriter(memoryStream, options))
+    using MemoryStream memoryStream = new();
+    using (Utf8JsonWriter jsonWriter = new(memoryStream, options))
     {
         jsonWriter.WriteStartObject();
         jsonWriter.WriteString("status", healthReport.Status.ToString());
