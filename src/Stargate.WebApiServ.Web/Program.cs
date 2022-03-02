@@ -1,4 +1,4 @@
-global using global::Microsoft.AspNetCore.Mvc;
+global using Microsoft.AspNetCore.Mvc;
 global using Stargate.WebApiServ.Data;
 global using Stargate.WebApiServ.Data.Models;
 using System.Text;
@@ -23,26 +23,12 @@ using Stargate.WebApiServ.Web.Libraries.JsonSerialization;
 using Stargate.WebApiServ.Web.Services;
 using Stargate.WebApiServ.Web.Swagger;
 
-// 运行时 ASPNETCORE_ENVIRONMENT 环境变量建议值：Development-开发环境、Staging-预演环境、Production（或不设置）-生产环境
-var currentEnv = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
-var config = new ConfigurationManager()
-    .SetBasePath(AppContext.BaseDirectory)
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-    .AddJsonFile($"appsettings.{currentEnv}.json", optional: true)
-    .AddEnvironmentVariables(prefix: "WEBAPISERV_")
-    .Build();
-
-// 为了能全生命周期（甚至在各种基础服务启动之前）记录日志，故早早在此处建立日志
+// 为了能全生命周期（甚至在各种基础服务启动之前）记录日志，故早早在此处临时建立日志
 Log.Logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(config)
-    .Filter.ByExcluding(Matching.WithProperty<string>(
-        "RequestPath",
-        p => p.StartsWith("/LogDashboard", StringComparison.OrdinalIgnoreCase) && p.Split('/')[^1].Contains('.')
-    ))
-    .WriteTo.File($"{AppContext.BaseDirectory}logs/LogDashboard.log",
-        rollingInterval: RollingInterval.Day,
-        outputTemplate: "{Timestamp:HH:mm:ss.fff} || {Level} || {SourceContext:l} || {Message} || {Exception} ||end {NewLine}"
-    )
+    .ReadFrom.Configuration(new ConfigurationManager()
+        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+        .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+        .Build())
     .CreateLogger();
 
 try
@@ -53,8 +39,25 @@ try
 
     #region Add services to the container.
 
+    builder.Host.ConfigureHostConfiguration(configHost =>
+    {
+        configHost.AddEnvironmentVariables(prefix: "WebApiServ_");
+    });
+
     // Serilog logging for ASP.NET Core, visit https://github.com/serilog/serilog-aspnetcore
-    builder.Host.UseSerilog();
+    builder.Host.UseSerilog((hostContext, loggerConfiguration) =>
+    {
+        loggerConfiguration
+            .ReadFrom.Configuration(hostContext.Configuration)
+            .Filter.ByExcluding(Matching.WithProperty<string>(
+                "RequestPath",
+                p => p.StartsWith("/LogDashboard", StringComparison.OrdinalIgnoreCase) && p.Split('/')[^1].Contains('.')
+            ))
+            .WriteTo.File("logs/LogDashboard/LogDashboard.log",
+                rollingInterval: RollingInterval.Day,
+                outputTemplate: "{Timestamp:HH:mm:ss.fff} || {Level} || {SourceContext:l} || {Message} || {Exception} ||end {NewLine}"
+            );
+    });
 
     // Wait 30 seconds for graceful shutdown.
     //builder.Host.ConfigureHostOptions(o => o.ShutdownTimeout = TimeSpan.FromSeconds(30));
@@ -96,7 +99,7 @@ try
         })
         .AddJsonOptions(options =>
         {
-            var jsonConfig = config.GetSection("Json");
+            var jsonConfig = builder.Configuration.GetSection("Json");
 
             if (jsonConfig.GetValue<string>("NamingPolicy").Equals("CamelCase", StringComparison.OrdinalIgnoreCase))
             {
@@ -133,7 +136,7 @@ try
 
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle.
     builder.Services.AddEndpointsApiExplorer();
-    Uri.TryCreate(config["AppSettings:AuthServer"], UriKind.RelativeOrAbsolute, out var authServerUri);
+    Uri.TryCreate(builder.Configuration["AppSettings:AuthServer"], UriKind.RelativeOrAbsolute, out var authServerUri);
     builder.Services.AddMySwaggerGen(authServerUri);
 
     builder.Services.AddHealthChecks()
@@ -142,7 +145,7 @@ try
         .AddDbContextCheck<TodoContext>()
         .AddCheck<StartupHealthCheck>("Startup", tags: new[] { "ready" });
 
-    builder.Services.AddLogDashboard();
+    builder.Services.AddLogDashboard(opt => opt.RootPath = "logs/LogDashboard");
 
     // Note .AddMiniProfiler() returns a IMiniProfilerBuilder for easy intellisense
     builder.Services.AddMiniProfiler().AddEntityFramework();
