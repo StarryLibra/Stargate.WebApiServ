@@ -31,10 +31,9 @@ Log.Logger = new LoggerConfiguration()
         .Build())
     .CreateLogger();
 
+Log.Information("Starting web host...");
 try
 {
-    Log.ForContext<Program>().Information("Starting web host...");
-    
     var builder = WebApplication.CreateBuilder(args);
 
     #region Add services to the container.
@@ -272,13 +271,13 @@ try
 
     app.Run();
 }
-catch (Exception ex)
+catch (Exception ex) when (!ex.GetType().Name.Equals("StopTheHostException", StringComparison.Ordinal))
 {
-    Log.ForContext<Program>().Fatal(ex, "Host terminated unexpectedly!");
+    Log.Fatal(ex, "Host terminated unexpectedly!");
 }
 finally
 {
-    Log.ForContext<Program>().Warning("Host had been closed.");
+    Log.Warning("Host shutting down...");
     Log.CloseAndFlush();
 }
 
